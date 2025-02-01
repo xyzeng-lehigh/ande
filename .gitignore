@@ -169,3 +169,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Tex
+*.aux
+*.log
+*.out
+*.toc
+doc/*.pdf
+
+# MacOS
+.DS_Store

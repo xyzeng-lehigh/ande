@@ -1,0 +1,142 @@
+% Use 12pt for font size of normal text
+\documentclass[12pt,letterpaper]{article}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{MnSymbol}
+\usepackage{mathrsfs}
+%\usepackage{mathabx}
+\usepackage{color,graphicx,pifont}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usepackage{mathtools}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{mdwlist}
+\usepackage{comment}
+%\usepackage{makeidx}
+%\makeindex
+
+\usepackage{cleveref}
+\crefname{equation}{}{}
+\crefname{enumi}{}{}
+\crefname{figure}{Figure}{Figure}
+\crefname{subsection}{Subsection}{Subsections}
+\crefname{lemma}{Lemma}{Lemma}
+\crefname{theorem}{Theorem}{Theorem}
+\crefname{proposition}{Proposition}{Proposition}
+\crefname{section}{Section}{Section}
+\crefname{appendix}{Appendix}{Appendix}
+\crefname{definition}{Definition}{Definition}
+\crefname{corol}{Corollary}{Corollary}
+\crefname{table}{Table}{Table}
+\crefname{exercise}{Exercise}{Exercise}
+
+% Page Layout
+\voffset=-0.25in	% Default is 1.0 inch
+\topmargin=0in
+\headheight=0in
+\headsep=0in
+
+\hoffset=-0.25in	% Default is 1.0 inch
+\marginparsep=0in
+\marginparwidth=0in
+\oddsidemargin=0in
+
+\textwidth=7in
+\textheight=9.5in
+
+%\pagestyle{empty}	% no page number
+\pagestyle{plain}	% with page number
+
+\begin{document}
+
+\newcommand{\nexthere}{{\color{red} (NEXT HERE)}}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\oname}[1]{\operatorname{#1}}
+\newcommand{\eqdef}{\stackrel{\mathrm{def}}{=\joinrel=}}
+\def\abs#1{\left|#1\right|}
+\def\labs#1{\big|#1\big|}
+\setlength{\unitlength}{1cm}
+\setlength{\tabcolsep}{0pt}
+\def\nrm#1{\left|\left|#1\right|\right|}
+\def\vnrm#1{\Vert #1 \Vert}
+\def\ab#1{\langle#1\rangle}
+\def\lab#1{\left\langle#1\right\rangle}
+\newcommand{\po}[1]{\frac{\partial}{\partial{#1}}}
+\newcommand{\poh}[1]{\partial/\partial{#1}}
+\newcommand{\pp}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\pph}[2]{\partial {#1}/\partial {#2}}
+\newcommand{\pop}[2]{\frac{\partial^{#1}}{\partial {#2}^{#1}}}
+\newcommand{\poph}[2]{\partial^{#1}/\partial {#2}^{#1}}
+\newcommand{\ppp}[3]{\frac{\partial^{#1} {#2}}{\partial {#3}^{#1}}}
+\newcommand{\ppph}[3]{\partial^{#1} {#2}/\partial {#3}^{#1}}
+\newcommand{\flow}[2]{{\mathcal{F}^{#1}_{#2}}}
+
+\newcommand{\hs}{{\oname{HS}}}
+\newcommand{\tr}{{\oname{TR}}}
+\newcommand{\fred}{{\oname{Fred}}}
+\newcommand{\ind}{{\oname{ind}}}
+
+\newtheorem{prop}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{corol}{Corollary}
+\newtheorem{lemma}{Lemma}
+
+\numberwithin{prop}{section}
+\numberwithin{theorem}{section}
+\numberwithin{algorithm}{section}
+\numberwithin{definition}{section}
+\numberwithin{equation}{subsection}
+\numberwithin{figure}{subsection}
+\numberwithin{corol}{section}
+\numberwithin{lemma}{section}
+\numberwithin{exercise}{subsection}
+
+\newcommand\appsecnums{
+    \setcounter{subsection}{0}
+    \renewcommand\thesubsection{\thesection.\Alph{subsection}}}
+\newcommand\noappsecnums{
+    \setcounter{subsection}{0}
+    \renewcommand\thesubsection{\thesection.\arabic{subsection}}}
+\newenvironment{cproof}
+    {\color{blue}\begin{proof}}
+    {\end{proof}}
+
+\large
+% Title
+\begin{center}
+  {\bf Usage Manual of \textbf{A}nalysis tool of \textbf{N}umerical methods for \textbf{D}ifferential \textbf{E}quations}
+\end{center}
+
+\normalsize
+% Authors
+\begin{center}
+Xianyi Zeng$^1$\\
+\end{center}
+$^1$Assistant Professor, Department of Mathematics, Lehigh University, Bethlehem, PA 18015, U.S.A. email: xyzeng@lehigh.edu\\
+\\
+\setcounter{tocdepth}{3}
+\tableofcontents
+%{\small
+%\section*{\small Color convention}
+%\begin{itemize*}
+%\item {Black texts} are normal texts.
+%\item {\color{blue} Blue texts} .
+%\item {\color{green} Green texts} .
+%\item {\color{cyan} Cyan texts} .
+%\item {\color{red} Red texts} .
+%\end{itemize*}
+%}
+
+\newpage
+
+\section{Background}
+\label{sec:bg}
+\input{ande_background}
+
+\end{document}

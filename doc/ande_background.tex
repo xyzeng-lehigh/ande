@@ -1,0 +1,84 @@
+\subsection{Finite-difference approximations}
+\label{sec:bg_fd}
+For finite-difference (FD) approximations to a function $u(x)$, we consider nodal values $u_j\approx u(x_j)$, where $x_j=jh$ and $h>0$ is the uniform cell size.
+
+\subsubsection{FD approximation to first-derivative}
+\label{sec:bg_fd_dx}
+In this section we seek the approximation:
+\begin{equation}\label{eq:bg_fd_dx}
+  u_x(x_j) \approx \mathcal{D}_xu_j\eqdef \frac{1}{h}\sum_{k=-l}^r\alpha_ku_{j+r}
+\end{equation}
+with optimal accuracy $p=l+r$.
+Here we assume $l,r\ge0$, and it is easy to see that $\mathcal{D}_x$ is at least $p$-th order accurate if and only if for any $P(x)\in\mathbb{P}^p$, there is:
+\begin{equation}\label{eq:bg_fd_dx_pexact}
+  P'(x_j) = \frac{1}{h}\sum_{k=-l}^rP(x_{j+r})\;,
+\end{equation}
+which is known as the $p$-exactness condition.
+One can show that given the stencil $(l,r)$, the operator $\mathcal{D}_x$ with order $p=l+r$ is unique and optimal, which is denoted $\mathcal{D}_x^{l,r}$.
+
+\medskip
+
+\noindent
+{\bf Explicit formula of coefficients}.
+The first consequence of~\cref{eq:bg_fd_dx_pexact} is the explicit formula for $\mathcal{D}^{l,r}_x$, as derived next.
+Define $L(x)=\prod_{k=-l}^r(x-x_{j+k})\in\mathbb{P}^{p+1}$ and $L_k(x)=L(x)/(x-x_{j+k})\in\mathbb{P}^p$, then the Lagrangian interpolation basis polynomials for the set $\{x_{j+k}:\,-l\le k\le r\}$ are given by $\{L_k(x)/L_k(x_{j+k}):\,-l\le k\le r\}$.
+It follows that for all $P(x)\in\mathbb{P}^p$:
+\begin{displaymath}
+  P(x) = \sum_{k=-l}^rP(x_{j+k})L_k(x)\;,
+\end{displaymath}
+hence the coefficients in $\mathcal{D}^{l,r}_xu_j=h^{-1}\sum_{k=-l}^r\alpha_k^{l,r}u_{j+k}$ is given by:
+\begin{equation}\label{eq:bg_fd_dx_coef}
+  \alpha_k^{l,r} = hL_k'(x_j) = \left\{\begin{array}{lcl}
+    \frac{(-1)^{k-1}l!r!}{k(l+k)!(r-k)!}\,, & & -l\le k\le r,\,k\ne0 \\ \vspace{-.1in} \\
+    H_l-H_r\,, & & k=0\;.
+  \end{array}\right.
+\end{equation}
+Here $H_m=1+\frac{1}{2}+\cdots+\frac{1}{m}$ are Harmonic numbers and by convention we denote $H_0=0$.
+When the stencil is obvious from the context, we shall write $\alpha^{l,r}_k$ as $\alpha_k$ for short.
+
+\medskip
+
+\noindent
+{\bf Semi-discretized approximation to linear advection equations}.
+Let us consider the semi-discretization of the linear advection equation $u_t+cu_x=0$, where $c>0$ is a constant.
+Following the standard Fourier analysis, we consider a simple wave given by $u(x,t)=e^{-i\kappa(x-ct)}$.
+The semi-discretized scheme is given by:
+\begin{equation}\label{eq:bg_fd_dx_adv_semi}
+  u_j' = -\frac{c}{h}\mathcal{D}_xu_j\;.
+\end{equation}
+On the one hand, the local truncation error to this method is $p$-th order, that is is one substitute $u_j$ with the exact solution, one has:
+\begin{displaymath}
+  ic\kappa e^{-i\kappa(x_j-ct)} = -\frac{c}{h}\sum_{k=-l}^r\alpha_k e^{-i\kappa(x_{j+k}-ct)} + O(h^{p+1})\;,
+\end{displaymath}
+which can be simplified to:
+\begin{equation}\label{eq:bg_fd_dx_adv_lte}
+  i\theta = -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+O(\theta^{p+1})\quad\textrm{or}\quad
+  i\theta e^{ir\theta} = -\sum_{k=-l}^r\alpha_ke^{i(r-k)\theta} + O(\theta^{p+1})\;,
+\end{equation}
+where $\theta=\kappa h$.
+The accuracy concerns $\theta\approx0$, or $e^{i\theta}\approx1$; to this end we may define $e^{i\theta}=1+z$, so that $O(\theta)=O(z)$ and~\cref{eq:bg_fd_dx_adv_lte}$_2$ reads:
+\begin{displaymath}
+  S_r(z) = (1+z)^r\ln(1+z) = S_{l,r}(z) + R_{l,r}(z)\;,\ S_{l,r}(z) = -\sum_{k=-l}^r\alpha_k(1+z)^{r-k}\in\mathbb{P}^p(z),\ R_{l,r}(z)=O(z^{p+1})\;.
+\end{displaymath}
+It follows that $\mathbb{S}_{l,r}(z)$ is the leading $p$-th degree polynomial approximation in the Taylor series of $S_r(z)=(1+z)^r\ln(1+z)$ about $z=0$, and the remainder term $R_{l,r}(z)$ can be obtained by the Taylor theorem in integral form:
+\begin{equation}\label{eq:bg_fd_dx_adv_rem}
+  R_{l,r}(z) = \int_0^1\frac{(1-t)^pS_r^{(p+1)}(tz)z^{p+1}}{p!}dt\;.
+\end{equation}
+By direct calculation:
+\begin{displaymath}
+  S_r^{(p+1)}(z) = \frac{(-1)^{p-r}r!(p-r)!}{(1+z)^{p+1-r}} = \frac{(-1)^lr!l!}{(1+z)^{l+1}}\;.
+\end{displaymath}
+This gives rise to the following identity:
+\begin{displaymath}
+  i\theta = -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+e^{-ir\theta}\int_0^1\frac{(-1)^l(1-t)^pr!l!z^{p+1}}{p!(1+tz)^{l+1}}dt\;.
+\end{displaymath}
+In the last integral, the integration path is the straight line from $1$ to $1+z=e^{i\theta}$; and the integrant has a singularity along the path if $z=-1$.
+Hence by the Cauchy's integral theorem, for all $0\le\theta<\pi$ we may pick a different path connecting $1$ and $e^{i\theta}$, namely $e^{i\varphi}, 0\le\varphi\le\theta$, and obtain:
+\begin{align}
+  \notag
+  i\theta &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+e^{-ir\theta}\int_0^{\theta}\frac{(-1)^l(e^{i\theta}-e^{i\varphi})^pr!l!}{p!e^{i(l+1)\varphi}}de^{i\varphi}\;. \\
+  \notag
+  &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(e^{i(\theta-\varphi)}-1)^pe^{-ir(\theta-\varphi)}d\varphi \\
+  \label{eq:bg_fd_dx_adv_semi_symbol}
+  &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(2i\sin\frac{\varphi}{2})^pe^{\frac{1}{2}(l-r)i\varphi}d\varphi\;.
+\end{align}
