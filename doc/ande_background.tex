@@ -1,3 +1,28 @@
+\subsection{Constants}
+\label{sec:bg_cnst}
+This manual will use many combinatoric constants, which are listed below:
+\begin{itemize}
+  \item {\it The Harmonic numbers}.
+    \begin{equation}\label{eq:bg_cnst_harm}
+      H_n = \sum_{k=1}^n\frac{1}{k} = 1 + \frac{1}{2} + \cdots + \frac{1}{n}\;,
+    \end{equation}
+    here $n$ is a non-negative integer.
+    By convention, we set $H_0=0$.
+  \item {\it Binomial coefficient}.
+    As usual, $n!$ denotes the factorial of a non-negative integer $n$ and we denote the binomial coefficients:
+    \begin{equation}\label{eq:bg_cnst_binom}
+      C_n^k = \binom{n}{k} = \frac{n!}{k!(n-k)!}\;,\quad 0\le k\le n\;.
+    \end{equation}
+  \item {\it Normalized binomial coefficients}.
+    A frequently used constantin this manual is normalized binomial coefficients by a certain number:
+    \begin{equation}\label{eq:bg_cnst_brat}
+      C^{l,r}_k = \frac{C_{l+r}^{l+k}}{C_{l+r}^l} = \frac{l!r!}{(l+k)!(r-k)!}\;,\quad -l\le k\le r\;.
+    \end{equation}
+    Here $l$ and $r$ are non-negative integers.
+    
+\end{itemize}
+
+
 \subsection{Finite-difference approximations}
 \label{sec:bg_fd}
 For finite-difference (FD) approximations to a function $u(x)$, we consider nodal values $u_j\approx u(x_j)$, where $x_j=jh$ and $h>0$ is the uniform cell size.
@@ -6,12 +31,12 @@ For finite-difference (FD) approximations to a function $u(x)$, we consider noda
 \label{sec:bg_fd_dx}
 In this section we seek the approximation:
 \begin{equation}\label{eq:bg_fd_dx}
-  u_x(x_j) \approx \mathcal{D}_xu_j\eqdef \frac{1}{h}\sum_{k=-l}^r\alpha_ku_{j+r}
+  u_x(x_j) \approx \mathcal{D}_xu_j\eqdef \frac{1}{h}\sum_{k=-l}^r\beta_ku_{j+k}
 \end{equation}
 with optimal accuracy $p=l+r$.
 Here we assume $l,r\ge0$, and it is easy to see that $\mathcal{D}_x$ is at least $p$-th order accurate if and only if for any $P(x)\in\mathbb{P}^p$, there is:
 \begin{equation}\label{eq:bg_fd_dx_pexact}
-  P'(x_j) = \frac{1}{h}\sum_{k=-l}^rP(x_{j+r})\;,
+  P'(x_j) = \frac{1}{h}\sum_{k=-l}^rP(x_{j+k})\;,
 \end{equation}
 which is known as the $p$-exactness condition.
 One can show that given the stencil $(l,r)$, the operator $\mathcal{D}_x$ with order $p=l+r$ is unique and optimal, which is denoted $\mathcal{D}_x^{l,r}$.
@@ -21,20 +46,20 @@ One can show that given the stencil $(l,r)$, the operator $\mathcal{D}_x$ with o
 \noindent
 {\bf Explicit formula of coefficients}.
 The first consequence of~\cref{eq:bg_fd_dx_pexact} is the explicit formula for $\mathcal{D}^{l,r}_x$, as derived next.
-Define $L(x)=\prod_{k=-l}^r(x-x_{j+k})\in\mathbb{P}^{p+1}$ and $L_k(x)=L(x)/(x-x_{j+k})\in\mathbb{P}^p$, then the Lagrangian interpolation basis polynomials for the set $\{x_{j+k}:\,-l\le k\le r\}$ are given by $\{L_k(x)/L_k(x_{j+k}):\,-l\le k\le r\}$.
+Define $L(x)=\prod_{k=-l}^r(x-x_{j+k})\in\mathbb{P}^{p+1}$ and $L_k(x)=L(x)/(x-x_{j+k})\in\mathbb{P}^p$, then the Lagrangian interpolation basis polynomials for the set $\{x_{j+k}:\,-l\le k\le r\}$ are given by $\{\hat{L}_k(x)\eqdef L_k(x)/L_k(x_{j+k}):\,-l\le k\le r\}$.
 It follows that for all $P(x)\in\mathbb{P}^p$:
 \begin{displaymath}
-  P(x) = \sum_{k=-l}^rP(x_{j+k})L_k(x)\;,
+  P(x) = \sum_{k=-l}^rP(x_{j+k})\hat{L}_k(x)\;,
 \end{displaymath}
-hence the coefficients in $\mathcal{D}^{l,r}_xu_j=h^{-1}\sum_{k=-l}^r\alpha_k^{l,r}u_{j+k}$ is given by:
+hence the coefficients in $\mathcal{D}^{l,r}_xu_j=\frac{1}{h}\sum_{k=-l}^r\beta_k^{l,r}u_{j+k}$ is given by:
 \begin{equation}\label{eq:bg_fd_dx_coef}
-  \alpha_k^{l,r} = hL_k'(x_j) = \left\{\begin{array}{lcl}
-    \frac{(-1)^{k-1}l!r!}{k(l+k)!(r-k)!}\,, & & -l\le k\le r,\,k\ne0 \\ \vspace{-.1in} \\
+  \beta_k^{l,r} = h\hat{L}_k'(x_j) = \left\{\begin{array}{lcl}
+    \frac{(-1)^{k-1}}{k}C_k^{l,r}\,, & & -l\le k\le r,\,k\ne0 \\ \vspace{-.1in} \\
     H_l-H_r\,, & & k=0\;.
   \end{array}\right.
 \end{equation}
-Here $H_m=1+\frac{1}{2}+\cdots+\frac{1}{m}$ are Harmonic numbers and by convention we denote $H_0=0$.
-When the stencil is obvious from the context, we shall write $\alpha^{l,r}_k$ as $\alpha_k$ for short.
+%Here $H_m=1+\frac{1}{2}+\cdots+\frac{1}{m}$ are Harmonic numbers and by convention we denote $H_0=0$.
+When the stencil is obvious from the context, we shall write $\mathcal{D}_x^{l,r}$ and $\beta^{l,r}_k$ as $\mathcal{D}_x$ and $\beta_k$ for short.
 
 \medskip
 
@@ -46,19 +71,19 @@ The semi-discretized scheme is given by:
 \begin{equation}\label{eq:bg_fd_dx_adv_semi}
   u_j' = -\frac{c}{h}\mathcal{D}_xu_j\;.
 \end{equation}
-On the one hand, the local truncation error to this method is $p$-th order, that is is one substitute $u_j$ with the exact solution, one has:
+On the one hand, the local truncation error to this method is $p$-th order, that is if one substitute $u_j$ with the exact solution, they obtain:
 \begin{displaymath}
-  ic\kappa e^{-i\kappa(x_j-ct)} = -\frac{c}{h}\sum_{k=-l}^r\alpha_k e^{-i\kappa(x_{j+k}-ct)} + O(h^{p+1})\;,
+  ic\kappa e^{-i\kappa(x_j-ct)} = u_t(x_j,t) = -cu_x(x_j,t) = -\frac{c}{h}\sum_{k=-l}^ru(x_{j+k},t) + O(h^{p+1}) = -\frac{c}{h}\sum_{k=-l}^r\beta_k e^{-i\kappa(x_{j+k}-ct)} + O(h^{p+1})\;,
 \end{displaymath}
 which can be simplified to:
 \begin{equation}\label{eq:bg_fd_dx_adv_lte}
-  i\theta = -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+O(\theta^{p+1})\quad\textrm{or}\quad
-  i\theta e^{ir\theta} = -\sum_{k=-l}^r\alpha_ke^{i(r-k)\theta} + O(\theta^{p+1})\;,
+  i\theta = -\sum_{k=-l}^r\beta_ke^{-ik\theta}+O(\theta^{p+1})\quad\textrm{or}\quad
+  i\theta e^{ir\theta} = -\sum_{k=-l}^r\beta_ke^{i(r-k)\theta} + O(\theta^{p+1})\;,
 \end{equation}
 where $\theta=\kappa h$.
 The accuracy concerns $\theta\approx0$, or $e^{i\theta}\approx1$; to this end we may define $e^{i\theta}=1+z$, so that $O(\theta)=O(z)$ and~\cref{eq:bg_fd_dx_adv_lte}$_2$ reads:
 \begin{displaymath}
-  S_r(z) = (1+z)^r\ln(1+z) = S_{l,r}(z) + R_{l,r}(z)\;,\ S_{l,r}(z) = -\sum_{k=-l}^r\alpha_k(1+z)^{r-k}\in\mathbb{P}^p(z),\ R_{l,r}(z)=O(z^{p+1})\;.
+  S_r(z) = (1+z)^r\ln(1+z) = S_{l,r}(z) + R_{l,r}(z)\;,\ S_{l,r}(z) = -\sum_{k=-l}^r\beta_k(1+z)^{r-k}\in\mathbb{P}^p(z),\ R_{l,r}(z)=O(z^{p+1})\;.
 \end{displaymath}
 It follows that $\mathbb{S}_{l,r}(z)$ is the leading $p$-th degree polynomial approximation in the Taylor series of $S_r(z)=(1+z)^r\ln(1+z)$ about $z=0$, and the remainder term $R_{l,r}(z)$ can be obtained by the Taylor theorem in integral form:
 \begin{equation}\label{eq:bg_fd_dx_adv_rem}
@@ -70,15 +95,23 @@ By direct calculation:
 \end{displaymath}
 This gives rise to the following identity:
 \begin{displaymath}
-  i\theta = -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+e^{-ir\theta}\int_0^1\frac{(-1)^l(1-t)^pr!l!z^{p+1}}{p!(1+tz)^{l+1}}dt\;.
+  i\theta = -\sum_{k=-l}^r\beta_ke^{-ik\theta}+e^{-ir\theta}\int_0^1\frac{(-1)^l(1-t)^pr!l!z^{p+1}}{p!(1+tz)^{l+1}}dt\;.
 \end{displaymath}
 In the last integral, the integration path is the straight line from $1$ to $1+z=e^{i\theta}$; and the integrant has a singularity along the path if $z=-1$.
 Hence by the Cauchy's integral theorem, for all $0\le\theta<\pi$ we may pick a different path connecting $1$ and $e^{i\theta}$, namely $e^{i\varphi}, 0\le\varphi\le\theta$, and obtain:
 \begin{align}
   \notag
-  i\theta &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+e^{-ir\theta}\int_0^{\theta}\frac{(-1)^l(e^{i\theta}-e^{i\varphi})^pr!l!}{p!e^{i(l+1)\varphi}}de^{i\varphi}\;. \\
+  i\theta &= -\sum_{k=-l}^r\beta_ke^{-ik\theta}+e^{-ir\theta}\int_0^{\theta}\frac{(-1)^l(e^{i\theta}-e^{i\varphi})^pr!l!}{p!e^{i(l+1)\varphi}}de^{i\varphi}\;. \\
   \notag
-  &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(e^{i(\theta-\varphi)}-1)^pe^{-ir(\theta-\varphi)}d\varphi \\
+  &= -\sum_{k=-l}^r\beta_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(e^{i(\theta-\varphi)}-1)^pe^{-ir(\theta-\varphi)}d\varphi \\
   \label{eq:bg_fd_dx_adv_semi_symbol}
-  &= -\sum_{k=-l}^r\alpha_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(2i\sin\frac{\varphi}{2})^pe^{\frac{1}{2}(l-r)i\varphi}d\varphi\;.
+  &= -\sum_{k=-l}^r\beta_ke^{-ik\theta}+\frac{(-1)^lr!l!}{p!}\int_0^{\theta}(2i\sin\frac{\varphi}{2})^pe^{\frac{1}{2}(l-r)i\varphi}d\varphi\;.
 \end{align}
+To study the stability of the semi-discretized system~\cref{eq:bg_fd_dx_adv_semi}, we assume initial data $u(x,0)=e^{-i\kappa x}$ then the solution is given by $u_j(t)=A(t)e^{-ij\theta}$, where:
+\begin{displaymath}
+  \frac{A'(t)}{A(t)} = -\frac{c}{h}\sum_{k=-l}^r\beta_ke^{-ik\theta} = -\frac{c}{h}\mu(\theta) = i\frac{c}{h}\omega(\theta)\;.
+\end{displaymath}
+Here $\omega$ is the numerical wave number and $\omega(\theta)=\theta+O(\theta^{p+1})$ by~\cref{eq:bg_fd_dx_adv_lte}; and stability of the semi-discretized method requires $\oname{Re}\mu(\theta)\ge 0$ for all $0\le \theta\le 2\pi$, and any zero of $\oname{Re}\mu(\theta)$ is simple:
+\begin{equation}\label{eq:bg_fd_dx_adv_re}
+  \oname{Re}\mu = \sum_{k=-l}^r\beta_k\cos(k\theta)
+\end{equation}
