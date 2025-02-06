@@ -44,7 +44,9 @@ One can show that given the stencil $(l,r)$, the operator $\mathcal{D}_x$ with o
 \medskip
 
 \noindent
-{\bf Explicit formula of coefficients}.
+\textbf{\textit{Explicit formula of coefficients}}.
+
+\smallskip
 The first consequence of~\cref{eq:bg_fd_dx_pexact} is the explicit formula for $\mathcal{D}^{l,r}_x$, as derived next.
 Define $L(x)=\prod_{k=-l}^r(x-x_{j+k})\in\mathbb{P}^{p+1}$ and $L_k(x)=L(x)/(x-x_{j+k})\in\mathbb{P}^p$, then the Lagrangian interpolation basis polynomials for the set $\{x_{j+k}:\,-l\le k\le r\}$ are given by $\{\hat{L}_k(x)\eqdef L_k(x)/L_k(x_{j+k}):\,-l\le k\le r\}$.
 It follows that for all $P(x)\in\mathbb{P}^p$:
@@ -64,7 +66,9 @@ When the stencil is obvious from the context, we shall write $\mathcal{D}_x^{l,r
 \medskip
 
 \noindent
-{\bf Semi-discretized approximation to linear advection equations}.
+\textbf{\textit{Semi-discretized approximation to linear advection equations}}.
+
+\smallskip
 Let us consider the semi-discretization of the linear advection equation $u_t+cu_x=0$, where $c>0$ is a constant.
 Following the standard Fourier analysis, we consider a simple wave given by $u(x,t)=e^{-i\kappa(x-ct)}$.
 The semi-discretized scheme is given by:
@@ -117,3 +121,24 @@ Here $\omega$ is the numerical wave number and $\omega(\theta)=\theta+O(\theta^{
 \end{equation}
 
 Lastly, we describe the stability region and order stars of the semi-discretized methods.
+To stay consistent with the literature on this subject, we consider instead $\lambda(\theta)=\mu(-\theta)=\sum_{k=-l}^r\beta_ke^{ik\theta}$ (one can obtain $\lambda$ directly by consider the simple wave $e^{i\kappa(x-ct)}$), then optimal accuracy states:
+\begin{equation}\label{eq:bg_fd_dx_lambda_order}
+  \lambda - i\theta = O(\theta^{p+1})\;,
+\end{equation}
+and for stability, one requires $\oname{Re}\lambda\ge0$ for all $0\le\theta\le2\pi$, and any zero of $\oname{Re}\lambda$ is simple.Denoting $z=i\theta$ and abusing the notation $\lambda(z)$, one defines the stability region of the semi-discretized method:
+\begin{displaymath}
+  \mathcal{S}' = \{z\in\mathbb{C}:\,\oname{Re}\lambda(z)\ge0\}\;,
+\end{displaymath}
+then a necessary condition (and almost sufficient condition less the simple roots on the imaginary axis) for the method to be stable is $i\mathbb{R}\subseteq\mathcal{S}'$.
+The theory of order stars consider $\sigma=\lambda-i\theta$ instead of $\lambda$, and define:
+\begin{equation}\label{eq:bg_fd_dx_lambda_stab}
+  \mathcal{S} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(z)\ge0\}\;,
+\end{equation}
+then $i\mathbb{R}\subseteq\mathcal{S}'\Leftrightarrow i\mathbb{R}\subseteq\mathcal{S}$.
+The order star is defined as the complement of $\mathcal{S}$:
+\begin{equation}\label{eq:bg_fd_dx_lambda_os}
+  \mathcal{O} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(x)<0\}\;.
+\end{equation}
+In the plots we will make for the order stars, the regions of $\mathcal{O}$ are indicated by shaded regions and those in the interior of $\mathcal{S}$ are not colored.
+In the vicinity of $z=0$, $\sigma(z)=\mu(z)-z=O(z^{p+1})$; thus $z=0$ is adjoined by $p+1$ sectors of $\mathcal{O}$, interlaced by $p+1$ sectors of $\mathcal{S}$, and each sector has the asymptotic angle $\frac{\pi}{p+1}$ as $z\to0$.
+This is also the origin of the name ``order star''.

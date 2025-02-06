@@ -38,7 +38,7 @@ def plot(var_name,val0,val1,func,plotZero,nsample):
     for i in range(0,nsample):
         val[i] = sp.Float(func.subs(sp.symbols(var_name),var[i]))
     plt.xlim(val0,val1)
-    plt.plot(var,val,'k-')
+    plt.plot(var,val,'b-')
     if plotZero:
         plt.plot([val0, val1],[0, 0],'r-')
     plt.xlabel(r'$'+'\\'+var_name+'$')
