@@ -2,6 +2,7 @@ import sys, os.path
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(),'../')))
 import utility.constants
 import utility.functions
+import utility.canvas
 
 import numpy as np
 import sympy as sp
@@ -37,7 +38,7 @@ def func_dx_real(l,r):
 
 def func_dx_imag(l,r):
     offset, coef = calc_coef_dx(l,r)
-    imag_mu = - utility.functions.func_sin_node(offset,coef)
+    imag_mu = utility.functions.func_sin_node(offset,coef)
     return imag_mu
 
 def plot_dx_real(l,r,plotZero=True,nsample=-1):
@@ -47,3 +48,11 @@ def plot_dx_real(l,r,plotZero=True,nsample=-1):
 def plot_dx_imag(l,r,plotZero=False,nsample=-1):
     imag_mu = func_dx_imag(l,r)
     utility.functions.plot_theta(0,2*np.pi,imag_mu,plotZero,nsample)
+
+# The next functions plot order stars/stability regions
+#   sigma(z) = \sum_k beta_k e^{kz} - z
+# which coinsides with mu - i\theta when z = i\theta
+def plot_dx_os(l,r,range_x,range_y=[-np.pi,np.pi],nsample=-1):
+    offset, coef = calc_coef_dx(l,r)
+    utility.canvas.plot_os_exp_z(offset,coef,range_x,range_y,nsample)
+    # plot canvas, construct function handle for sigma, etc.
