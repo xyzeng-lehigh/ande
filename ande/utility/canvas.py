@@ -23,4 +23,6 @@ def plot_os_exp_z(offset,coef,range_x,range_y,nsample):
     #plt.contour(X,Y,W,levels=[0],colors=['k'],linewidths=2)
     plt.contourf(X,Y,W,levels=[np.min(np.min(W))-1,0],cmap=plt.cm.bone)
     plt.plot([0,0],[range_y[0],range_y[1]],'k-',linewidth=2)
+    plt.ylabel(r'$'+'\\'+'sigma'+'(z)$',fontsize=18)
+    plt.xlabel(r'z',fontsize=18)
     plt.show()

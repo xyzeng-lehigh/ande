@@ -138,3 +138,18 @@ The order star is defined as the complement of $\mathcal{S}$:
 In the plots we will make for the order stars, the regions of $\mathcal{O}$ are indicated by shaded regions and those in the interior of $\mathcal{S}$ are not colored.
 In the vicinity of $z=0$, $\sigma(z)=O(z^{p+1})$; thus $z=0$ is adjoined by $p+1$ sectors of $\mathcal{O}$, interlaced by $p+1$ sectors of $\mathcal{S}$, and each sector has the asymptotic angle $\frac{\pi}{p+1}$ as $z\to0$.
 This is also the origin of the name ``order star''.
+
+\subsection{Finite-volume approximations}
+\label{sec:bg_fv}
+Finite-volume approximation is not too much from the finite-difference ones, except that they are usually in conservative forms.
+
+\subsection{Hybrid-variable approximations}
+\label{sec:bg_hv}
+For hybrid-variable (HV) approximations to a function $u(x)$, we consider both nodal values $u_j\approx u(x_j)$ and cell-averaged values $\overline{u}_{\phf{j}}=\frac{1}{h}\int_{x_j}^{x_{j+1}}u(x)dx$.
+
+\subsubsection{HV approximation to first-derivative}
+\label{sec:bg_hv_dx}
+To approximate $u_x(x_j)$, we consider the following general discrete operator:
+\begin{equation}\label{eq:bg_hv_dx}
+  u_x(x_j) \approx [\mathcal{D}_xu]_j \eqdef \frac{1}{h}\sum_{k=-\bl}^{\br-1}\alpha_k\overline{u}_{\phf{j+k}}+\frac{1}{h}\sum_{k=-l}^r\beta_ku_{j+k}\;.
+\end{equation}

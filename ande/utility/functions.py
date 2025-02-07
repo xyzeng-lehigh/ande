@@ -41,7 +41,7 @@ def plot(var_name,val0,val1,func,plotZero,nsample):
     plt.plot(var,val,'b-')
     if plotZero:
         plt.plot([val0, val1],[0, 0],'r-')
-    plt.xlabel(r'$'+'\\'+var_name+'$')
+    plt.xlabel(r'$'+'\\'+var_name+'$',fontsize=18)
     plt.show()
 
 def plot_theta(val0,val1,func,plotZero,nsample):
