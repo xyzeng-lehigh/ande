@@ -72,11 +72,11 @@ Let us consider the semi-discretization of the linear advection equation $u_t+cu
 Following the standard Fourier analysis, we consider a simple wave given by $u(x,t)=e^{i\kappa(x-ct)}$.
 The semi-discretized scheme is given by:
 \begin{equation}\label{eq:bg_fd_dx_adv_semi}
-  u_j' = -\frac{c}{h}\mathcal{D}_xu_j\;.
+  u_j' = -c\mathcal{D}_xu_j\;.
 \end{equation}
 On the one hand, the local truncation error to this method is $p$-th order, that is if one substitute $u_j$ with the exact solution, they obtain:
 \begin{displaymath}
-  -ic\kappa e^{i\kappa(x_j-ct)} = u_t(x_j,t) = -cu_x(x_j,t) = -\frac{c}{h}\sum_{k=-l}^ru(x_{j+k},t) + O(h^{p+1}) = -\frac{c}{h}\sum_{k=-l}^r\beta_k e^{i\kappa(x_{j+k}-ct)} + O(h^{p+1})\;,
+  -ic\kappa e^{i\kappa(x_j-ct)} = u_t(x_j,t) = -cu_x(x_j,t) = -\frac{c}{h}\sum_{k=-l}^r\beta_ku(x_{j+k},t) + O(h^p) = -\frac{c}{h}\sum_{k=-l}^r\beta_k e^{i\kappa(x_{j+k}-ct)} + O(h^p)\;,
 \end{displaymath}
 which can be simplified to:
 \begin{equation}\label{eq:bg_fd_dx_adv_lte}
@@ -121,17 +121,17 @@ Here $\omega$ is the numerical wave number and $\omega(\theta)=\theta+O(\theta^{
 
 Lastly, we describe the stability region and order stars of the semi-discretized methods.
 By~\cref{eq:bg_fd_dx_adv_lte}, we have
-\begin{equation}\label{eq:bg_fd_dx_lambda_order}
-  \sigma(\theta) = \lambda(\theta) - i\theta = O(\theta^{p+1})\;;
+\begin{equation}\label{eq:bg_fd_dx_mu_order}
+  \sigma(\theta) = \mu(\theta) - i\theta = O(\theta^{p+1})\;;
 \end{equation}
-and for stability, one requires $\oname{Re}\lambda\ge0$ or $\oname{Re}\sigma\ge0$ for all $0\le\theta\le2\pi$, and any zero of $\oname{Re}\sigma$ is simple.
-Denoting $z=i\theta$ and abusing the notation $\lambda(z)$ and $\sigma(z)$, one defines the stability region of the semi-discretized method:
-\begin{equation}\label{eq:bg_fd_dx_lambda_stab}
+and for stability, one requires $\oname{Re}\mu\ge0$ or $\oname{Re}\sigma\ge0$ for all $0\le\theta\le2\pi$, and any zero of $\oname{Re}\sigma$ is simple.
+Denoting $z=i\theta$ and abusing the notation $\mu(z)$ and $\sigma(z)$, one defines the stability region of the semi-discretized method:
+\begin{equation}\label{eq:bg_fd_dx_mu_stab}
   \mathcal{S} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(z)\ge0\}\;,
 \end{equation}
 then a necessary condition (and almost sufficient condition less the simple-root requirement on the imaginary axis) for the method to be stable is $i\mathbb{R}\subseteq\mathcal{S}$.
 The order star is defined as the complement of $\mathcal{S}$:
-\begin{equation}\label{eq:bg_fd_dx_lambda_os}
+\begin{equation}\label{eq:bg_fd_dx_mu_os}
   \mathcal{O} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(x)<0\}\;.
 \end{equation}
 In the plots we will make for the order stars, the regions of $\mathcal{O}$ are indicated by shaded regions and those in the interior of $\mathcal{S}$ are not colored.
@@ -190,3 +190,35 @@ In the end, the coefficients are computed as below:
     \beta_{\nu} &= -\frac{2}{\nu}C^{\bl,\br}_{\nu}C^{l,r}_{\nu}\,,\ -l\le\nu\le r\,,\ \nu\ne0\;.
   \end{align}
 \end{subequations}
+
+\medskip
+
+\noindent
+\textbf{\textit{Semi-discretized approximation to linear advection equations}}.
+
+\smallskip
+Consider the semi-discretization of $u_t+cu_x=0$ with ($c>0$) again, let the initial condition be given by a simple wave $u(x,t)=e^{i\kappa(x-ct)}$, one has:
+\begin{displaymath}
+  u_j' = -c[\mathcal{D}_xu]_j\;.
+\end{displaymath}
+Substituting the exact solution, there is:
+\begin{displaymath}
+  -ic\kappa e^{i\kappa(x_j-ct)} = u_t(x_j,t) = -cu_x(x_j,t) = -\frac{c}{h}\left[\sum_{k=-\bl}^{\br-1}\frac{\alpha_k}{h}\int_{x_{j+k}}^{x_{j+k+1}}e^{i\kappa(x-ct)}dx+\sum_{k=-l}^r\beta_ke^{i\kappa(x_{j+k}-ct)}\right]+O(h^p)
+\end{displaymath}
+or equivalently:
+\begin{equation}\label{eq:bg_hv_dx_adv_lte}
+  i\theta = \sum_{k=-\bl}^{\br-1}\frac{\alpha_k(e^{i(k+1)\theta}-e^{ik\theta)})}{i\theta}+\sum_{k=-l}^r\beta_ke^{ik\theta}+O(\theta^{p+1})
+  = \frac{1}{i\theta}(e^{i\theta}-1)\alpha(e^{i\theta})+\beta(e^{i\theta})+O(\theta^{p+1})\;,
+\end{equation}
+here $\alpha(\cdot)$ and $\beta(\cdot)$ are Laurent polynomials:
+\begin{equation}\label{eq:bg_hv_dx_adv_poly}
+  \alpha(z)=\sum_{k=-\bl}^{\br-1}\alpha_kz^k\;,\quad\beta(z)=\sum_{k=-l}^r\beta_kz^k\;.
+\end{equation}
+
+{\color{red}
+  We'll show that a necessary condition for the semi-discretized method to be stable is: $\oname{Re}\beta(e^{i\theta})\ge0$ for all $\theta$:
+  \begin{align*}
+    \oname{Re}\beta(e^{i\theta}) &= 2(H_{\bl}-H_{\br}+H_l-H_r)-\sum_{k=-l}^{-1}\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k-\sum_{k=1}^r\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k \\
+    &= 2(H_{\bl}-H_{\br}+H_l-H_r)+\sum_{k=1}^{l}\frac{2}{k}C^{\bl,\br}_{-k}C^{l,r}_{-k}-\sum_{k=1}^r\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k
+  \end{align*}
+}
