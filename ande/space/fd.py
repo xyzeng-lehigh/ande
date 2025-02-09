@@ -14,7 +14,9 @@ import sympy as sp
 # has optimal order p=l+r
 # 
 # coef[offset+k] = beta_k, -l \le k \le r
-def calc_coef_dx(l,r):
+def calc_coef_dx(stencil):
+    l = stencil[0]
+    r = stencil[1]
     offset = l
     coef   = []
     for k in range(-l,0):
@@ -31,28 +33,28 @@ def calc_coef_dx(l,r):
 #   Im mu = - \sum_k beta_k sin(k\theta)
 # func_* return function handles
 # plot_* plot the functions on the interval [0, 2 pi]
-def func_dx_real(l,r):
-    offset, coef = calc_coef_dx(l,r)
+def func_dx_real(stencil):
+    offset, coef = calc_coef_dx(stencil)
     real_mu = utility.functions.func_cos_node(offset,coef)
     return real_mu
 
-def func_dx_imag(l,r):
-    offset, coef = calc_coef_dx(l,r)
+def func_dx_imag(stencil):
+    offset, coef = calc_coef_dx(stencil)
     imag_mu = utility.functions.func_sin_node(offset,coef)
     return imag_mu
 
-def plot_dx_real(l,r,plotZero=True,nsample=-1):
-    real_mu = func_dx_real(l,r)
+def plot_dx_real(stencil,plotZero=True,nsample=-1):
+    real_mu = func_dx_real(stencil)
     utility.functions.plot_theta(0,2*np.pi,real_mu,plotZero,nsample)
 
-def plot_dx_imag(l,r,plotZero=False,nsample=-1):
-    imag_mu = func_dx_imag(l,r)
+def plot_dx_imag(stencil,plotZero=False,nsample=-1):
+    imag_mu = func_dx_imag(stencil)
     utility.functions.plot_theta(0,2*np.pi,imag_mu,plotZero,nsample)
 
 # The next functions plot order stars/stability regions
 #   sigma(z) = \sum_k beta_k e^{kz} - z
 # which coinsides with mu - i\theta when z = i\theta
-def plot_dx_os(l,r,range_x,range_y=[-np.pi,np.pi],nsample=-1):
-    offset, coef = calc_coef_dx(l,r)
+def plot_dx_os(stencil,range_x,range_y=[-np.pi,np.pi],nsample=-1):
+    offset, coef = calc_coef_dx(stencil)
     utility.canvas.plot_os_exp_z(offset,coef,range_x,range_y,nsample)
     # plot canvas, construct function handle for sigma, etc.

@@ -19,7 +19,6 @@ This manual will use many combinatoric constants, which are listed below:
       C^{l,r}_k = \frac{C_{l+r}^{l+k}}{C_{l+r}^l} = \frac{l!r!}{(l+k)!(r-k)!}\;,\quad -l\le k\le r\;.
     \end{equation}
     Here $l$ and $r$ are non-negative integers.
-    
 \end{itemize}
 
 
@@ -153,3 +152,41 @@ To approximate $u_x(x_j)$, we consider the following general discrete operator:
 \begin{equation}\label{eq:bg_hv_dx}
   u_x(x_j) \approx [\mathcal{D}_xu]_j \eqdef \frac{1}{h}\sum_{k=-\bl}^{\br-1}\alpha_k\overline{u}_{\phf{j+k}}+\frac{1}{h}\sum_{k=-l}^r\beta_ku_{j+k}\;.
 \end{equation}
+We shall only consider a contiguous stencil, meaning $\max(0,\bl-1)\le l\le \bl$ and $\max(0,\br-1)\le r\le\br$.
+The optimal order of accuracy of~\cref{eq:bg_hv_dx} is $p=l+r+\bl+\br$, and the $p$-exactness condition is for any $P(x)\in\mathbb{P}^p$:
+\begin{equation}\label{eq:bg_hv_dx_pexact}
+  P'(x_j) = \frac{1}{h}\sum_{k=-\bl}^{\br-1}\alpha_k\frac{1}{h}\int_{x_{j+k}}^{x_{j+k+1}}P(x)dx+\frac{1}{h}\sum_{k=-l}^r\beta_kP(x_{j+k})\;.
+\end{equation}
+Again, we denote this unique operator by $[\mathcal{D}^{\bl,\br,l,r}_x]$, or $[\mathcal{D}_x]$ for short when there is no ambiguity.
+
+\medskip
+
+\noindent
+\textbf{\textit{Explicit formula of coefficients}}.
+
+\smallskip
+Similar as before, the $p$-exactness condition allows one to compute the coefficients $\alpha_k$ and $\beta_k$ explicitly.
+The idea is to consider the anti-derivative of $P$, which is a polynomial of degree no more than $p+1$.
+And~\cref{eq:bg_hv_dx_pexact} can be rephrased as for all $Q\in\mathbb{P}^{p+1}$:
+\begin{align}
+  \notag
+  Q''(x_j) &= \frac{1}{h}\sum_{k=-\bl}^{\br-1}\alpha_k\frac{1}{h}\left[Q(x_{j+k+1})-Q(x_{j+k})\right]+\frac{1}{h}\sum_{k=-l}^r\beta_kQ'(x_{j+k}) \\
+  \label{eq:bg_hv_dx_qexact}
+  &= \sum_{k=-\bl}^{\br}\frac{\Delta\alpha_k}{h^2}Q(x_{j+k}) + \sum_{k=-l}^{r}\frac{\beta_k}{h}Q'(x_{j+k})\;,
+\end{align}
+where $\Delta\alpha_k=\alpha_k-\alpha_{k-1}$, $-\bl\le k\le\br$ and we assume $\alpha_{-\bl-1}=\alpha_{\br}=0$.
+Thus the coefficients $\Delta\alpha_k$ and $\beta_k$ are derived using the Hermite interpolation polynomials, at least when $\bl=l$ and $\br=r$ (in other cases, some adjustments need to be made).
+
+In the end, the coefficients are computed as below:
+\begin{subequations}\label{eq:bg_hv_dx_coef}
+  \begin{align}
+    \label{eq:bg_hv_dx_coef_alpha_neg}
+    \alpha_{\nu} &= -(1-\delta_{\bl l})\frac{2}{\bl^2}C^{\bl,\br}_{-\bl}C^{\bl,r}_{-\bl}-\sum_{k=-l}^{\nu}\frac{2(1+k(H_{\bl+k}-H_{\br-k}+H_{l+k}-H_{r-k}))}{k^2}C^{\bl,\br}_kC^{l,r}_k\,,\ -\bl\le\nu<0 \\
+    \label{eq:bg_hv_dx_coef_alpha_pos}
+    \alpha_{\nu} &= \sum_{k=\nu+1}^{r}\frac{2(1+k(H_{\bl+k}-H_{\br-k}+H_{l+k}-H_{r-k}))}{k^2}C^{\bl,\br}_kC^{l,r}_k+(1-\delta_{\br r})\frac{2}{\br^2}C^{\bl,\br}_{\br}C^{l,\br}_{\br}\,,\ 0\le\nu<\br \\
+    \label{eq:bg_hv_dx_coef_beta_zero}
+    \beta_0 &= 2(H_{\bl}-H_{\br}+H_l-H_r) \\
+    \label{eq:bg_hv_dx_coef_beta_nzero}
+    \beta_{\nu} &= -\frac{2}{\nu}C^{\bl,\br}_{\nu}C^{l,r}_{\nu}\,,\ -l\le\nu\le r\,,\ \nu\ne0\;.
+  \end{align}
+\end{subequations}
