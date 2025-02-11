@@ -46,3 +46,7 @@ def plot(var_name,val0,val1,func,plotZero,nsample):
 
 def plot_theta(val0,val1,func,plotZero,nsample):
     plot('theta',val0,val1,func,plotZero,nsample)
+
+def plot_coef(index,coefs):
+    plt.plot(index,coefs,'k.',markersize=12)
+    plt.show()

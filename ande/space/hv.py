@@ -105,3 +105,46 @@ def plot_dx_real_beta(stencil,plotZero=True,nsample=-1):
 def plot_dx_imag_beta(stencil,plotZero=False,nsample=-1):
     imag_beta = func_dx_imag_beta(stencil)
     utility.functions.plot_theta(0,2*np.pi,imag_beta,plotZero,nsample)
+
+# This function plot the coefficient of Re beta(e^{i\theta}):
+#   [0, 1, ..., max(ln,rn)] v.s. [beta_0 beta_{-1} ... beta_{-l}] + [0 beta_1 ... beta_r]
+# if fold = True, or
+#   [-l,..,0,...,r] v.s. [beta_{-l} ... beta_{-1} beta_0 beta_1 ... beta_r]
+# if fold = False.
+# Normalization:
+#   - no normalization if normalize='none'
+#   - by beta_0 if normalize='first'
+#   - by max_k|beta_k| or max(max_k|beta_k+beta_{-k}|,\abs{beta_0}) if normalize = 'max'
+def plot_coef_dx_node_cos(stencil,fold=True,normalize='first'):
+    offset, coef = calc_coef_dx_node(stencil)
+    coefs = []
+    ln = offset
+    rn = len(coef)-1-ln
+    if fold:
+        index = list(range(0,max(ln,rn)+1))
+        coefs.append( float(coef[offset]) )
+        for k in range(1,max(ln,rn)+1):
+            coefs.append(0.0)
+            if k <= ln:
+                coefs[-1] = coefs[-1] + float(coef[offset-k])
+            if k <= rn:
+                coefs[-1] = coefs[-1] + float(coef[offset+k])
+    else:
+        index = list(range(-ln,rn+1))
+        for k in range(0,len(index)):
+            coefs.append(float(coef[k]))
+    to_divide = 1.0
+    divide = False
+    if normalize=='first':
+        to_divide = float(coef[offset])
+        divide = True
+    if normalize=='max':
+        to_divide = abs(float(coef[offset]))
+        for k in range(0,len(coefs)):
+            to_divide = max(to_divide,abs(coefs[k]))
+        divide = True
+    if divide:
+        for k in range(0,len(coefs)):
+            coefs[k] = coefs[k]/to_divide
+    utility.functions.plot_coef(index,coefs)
+
