@@ -125,7 +125,7 @@ By~\cref{eq:bg_fd_dx_adv_lte}, we have
   \sigma(\theta) = \mu(\theta) - i\theta = O(\theta^{p+1})\;;
 \end{equation}
 and for stability, one requires $\oname{Re}\mu\ge0$ or $\oname{Re}\sigma\ge0$ for all $0\le\theta\le2\pi$, and any zero of $\oname{Re}\sigma$ is simple.
-Denoting $z=i\theta$ and abusing the notation $\mu(z)$ and $\sigma(z)$, one defines the stability region of the semi-discretized method:
+Denoting $z=i\theta$ and abusing the notation $\mu(z)$ and $\sigma(z)=\mu(z)-z$, one defines the stability region of the semi-discretized method:
 \begin{equation}\label{eq:bg_fd_dx_mu_stab}
   \mathcal{S} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(z)\ge0\}\;,
 \end{equation}
@@ -213,6 +213,34 @@ or equivalently:
 here $\alpha(\cdot)$ and $\beta(\cdot)$ are Laurent polynomials:
 \begin{equation}\label{eq:bg_hv_dx_adv_poly}
   \alpha(z)=\sum_{k=-\bl}^{\br-1}\alpha_kz^k\;,\quad\beta(z)=\sum_{k=-l}^r\beta_kz^k\;.
+\end{equation}
+Stability analysis of the semi-discretized method:
+\begin{equation}\label{eq:bg_hv_dx_adv_semi}
+  \left\{\begin{array}{l}
+    \overline{u}'_{\phf{j}} = -\frac{c}{h}\left(u_{j+1}-u_j\right)\;, \\ \vspace*{-.1in} \\
+    u'_j = -\frac{c}{h}[\mathcal{D}_xu]_j
+  \end{array}\right.
+\end{equation}
+gives rise to the following characteristic equation:
+\begin{equation}\label{eq:bg_hv_dx_adv_semi_char}
+  \mu^2-\beta(e^{i\theta})\mu-(e^{i\theta}-1)\alpha(e^{i\theta}) = 0\;.
+\end{equation}
+It has two roots $\mu_1=i\theta+O(\theta^{p+2})$ and $\mu_2=\beta(0)+O(\theta)$; thus stability of the method requires $\max\oname{Re}\mu_{1,2}(\theta)\ge0$ and zeroes are simple.
+One can show that this is equivalent to show:
+\begin{equation}\label{eq:bg_hv_dx_adv_semi_iff}
+  \oname{Re}\beta(\theta)\ge0\;,\quad\oname{Re}\beta\oname{Re}\left[\overline{H}(e^{i\theta}-1)G\right]+\left\{\oname{Im}\left[(e^{i\theta}-1)G\right]\right\}^2\le0\;.
+\end{equation}
+
+Alternatively, one can define the stability region and order stars, with the aid of the language of Riemann surfaces.
+To this end, \cref{eq:bg_hv_dx_adv_poly} defines a Riemann surface:
+\begin{equation}\label{eq:bg_hv_dx_adv_rs}
+  \mathcal{M} = \{\bs{z}=(z,\mu)\in\mathbb{S}\times\mathbb{C}:\,\mu^2-\beta(e^z)\mu-(e^z-1)\alpha(e^z)=0\}\;,
+\end{equation}
+where $\mathbb{S}$ is the strip $\{z\in\mathbb{C}:\,-\pi\le\oname{Im}z\le\pi\}$ with the two edges identified with each other.
+We define the projections:
+\begin{equation}\label{eq:bg_hv_dx_adv_proj}
+  \rho\,:\,\mathcal{M}\rightarrow\mathbb{S}\;,\ \rho(\bs{z})=z\;;\quad
+  E\,:\,\mathcal{M}\rightarrow\mathbb{C}\;,\ E(\bs{z})=\mu\;.
 \end{equation}
 
 {\color{red}
