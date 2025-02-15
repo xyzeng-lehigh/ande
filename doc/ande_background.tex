@@ -132,7 +132,7 @@ Denoting $z=i\theta$ and abusing the notation $\mu(z)$ and $\sigma(z)=\mu(z)-z$,
 then a necessary condition (and almost sufficient condition less the simple-root requirement on the imaginary axis) for the method to be stable is $i\mathbb{R}\subseteq\mathcal{S}$.
 The order star is defined as the complement of $\mathcal{S}$:
 \begin{equation}\label{eq:bg_fd_dx_mu_os}
-  \mathcal{O} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(x)<0\}\;.
+  \mathcal{O} = \{z\in\mathbb{C}:\,\oname{Re}\sigma(z)<0\}\;.
 \end{equation}
 In the plots we will make for the order stars, the regions of $\mathcal{O}$ are indicated by shaded regions and those in the interior of $\mathcal{S}$ are not colored.
 In the vicinity of $z=0$, $\sigma(z)=O(z^{p+1})$; thus $z=0$ is adjoined by $p+1$ sectors of $\mathcal{O}$, interlaced by $p+1$ sectors of $\mathcal{S}$, and each sector has the asymptotic angle $\frac{\pi}{p+1}$ as $z\to0$.
@@ -234,19 +234,25 @@ One can show that this is equivalent to show:
 Alternatively, one can define the stability region and order stars, with the aid of the language of Riemann surfaces.
 To this end, \cref{eq:bg_hv_dx_adv_poly} defines a Riemann surface:
 \begin{equation}\label{eq:bg_hv_dx_adv_rs}
-  \mathcal{M} = \{\bs{z}=(z,\mu)\in\mathbb{S}\times\mathbb{C}:\,\mu^2-\beta(e^z)\mu-(e^z-1)\alpha(e^z)=0\}\;,
+  \mathbb{M} = \{\bs{z}=(z,\mu)\in\mathbb{S}\times\mathbb{C}:\,\mu^2-\beta(e^z)\mu-(e^z-1)\alpha(e^z)=0\}\;,
 \end{equation}
 where $\mathbb{S}$ is the strip $\{z\in\mathbb{C}:\,-\pi\le\oname{Im}z\le\pi\}$ with the two edges identified with each other.
 We define the projections:
 \begin{equation}\label{eq:bg_hv_dx_adv_proj}
-  \rho\,:\,\mathcal{M}\rightarrow\mathbb{S}\;,\ \rho(\bs{z})=z\;;\quad
-  E\,:\,\mathcal{M}\rightarrow\mathbb{C}\;,\ E(\bs{z})=\mu\;.
+  \rho\,:\,\mathbb{M}\rightarrow\mathbb{S}\;,\ \rho(\bs{z})=z\;;\quad
+  E\,:\,\mathbb{M}\rightarrow\mathbb{C}\;,\ E(\bs{z})=\mu\;.
 \end{equation}
+Then the stability region $\mathcal{S}$ and the order star $\mathcal{O}$ are defined respectively as:
+\begin{align}
+  \label{eq:bg_hv_dx_adv_stab}
+  \mathcal{S} &= \{\bs{z}\in\mathbb{M}:\,\oname{Re}\sigma(\bs{z})>0\}\;, \\
+  \label{eq:bg_hv_dx_adv_os}
+  \mathcal{O} &= \{\bs{z}\in\mathbb{M}:\,\oname{Re}\sigma(\bs{z})<0\}\;,
+\end{align}
+where $\sigma(\bs{z}) = E(\bs{z}) - \rho(\bs{z})$.
+The method is stable if $\rho^{-1}([-i\pi,\,i\pi])$ is contained in $\mathcal{S}$ except for the origin $\bs{z}=(0,0)$.
 
-{\color{red}
-  We'll show that a necessary condition for the semi-discretized method to be stable is: $\oname{Re}\beta(e^{i\theta})\ge0$ for all $\theta$:
-  \begin{align*}
-    \oname{Re}\beta(e^{i\theta}) &= 2(H_{\bl}-H_{\br}+H_l-H_r)-\sum_{k=-l}^{-1}\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k-\sum_{k=1}^r\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k \\
-    &= 2(H_{\bl}-H_{\br}+H_l-H_r)+\sum_{k=1}^{l}\frac{2}{k}C^{\bl,\br}_{-k}C^{l,r}_{-k}-\sum_{k=1}^r\frac{2}{k}C^{\bl,\br}_kC^{l,r}_k
-  \end{align*}
-}
+{\bf Remark}: The above discussion is not entirely correct, as it omits the discussion of branching point, which forms a set of isolated points in $\mathbb{M}$, which we denote by $\mathcal{B}$:
+\begin{equation}\label{eq:bg_hv_dx_adv_br}
+  \mathcal{B} = \{\bs{z}=(z,\mu)\in\mathbb{M}:\,\mu \textrm{ is a double root of } \mu^2-\beta(e^z)\mu-(e^z-1)\alpha(e^z)=0\}\;.
+\end{equation}
