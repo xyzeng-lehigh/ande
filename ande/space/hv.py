@@ -102,6 +102,14 @@ def plot_dx_real_beta(stencil,plotZero=True,nsample=-1):
     real_beta = func_dx_real_beta(stencil)
     utility.functions.plot_theta(0,2*np.pi,real_beta,plotZero,nsample)
 
+def plot_dx_real_beta_wsin(stencil,waveNo,sinPow,plotZero=True,nsample=-1):
+    real_beta = func_dx_real_beta(stencil)
+    theta = sp.symbols('theta')
+    wreal_beta = real_beta
+    for k in range(0,sinPow):
+        wreal_beta = wreal_beta * sp.sin(waveNo*theta/2)
+    utility.functions.plot_theta(0,2*np.pi,wreal_beta,plotZero,nsample)
+
 def plot_dx_imag_beta(stencil,plotZero=False,nsample=-1):
     imag_beta = func_dx_imag_beta(stencil)
     utility.functions.plot_theta(0,2*np.pi,imag_beta,plotZero,nsample)
