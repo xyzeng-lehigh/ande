@@ -42,11 +42,16 @@ def plot(var_name,val0,val1,func,plotZero,nsample):
     if plotZero:
         plt.plot([val0, val1],[0, 0],'r-')
     plt.xlabel(r'$'+'\\'+var_name+'$',fontsize=18)
-    plt.show()
+    #plt.show()
 
 def plot_theta(val0,val1,func,plotZero,nsample):
     plot('theta',val0,val1,func,plotZero,nsample)
 
 def plot_coef(index,coefs):
     plt.plot(index,coefs,'k.',markersize=12)
-    plt.show()
+    #plt.show()
+
+def add_vertical_lines(vMarkers):
+    [y_min, y_max] = plt.gca().get_ylim()
+    for xval in vMarkers:
+        plt.plot([xval, xval],[y_min, y_max],'g--')

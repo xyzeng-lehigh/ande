@@ -7,6 +7,7 @@ import utility.canvas
 import numpy as np
 import sympy as sp
 import math
+import matplotlib.pyplot as plt
 
 # compute four-digit stencil lc, rc, ln, rn 
 # given l = lc+ln and r = rc+rn
@@ -80,6 +81,55 @@ def calc_coef_dx_node(stencil):
         coef.append( - sp.Rational(2,k) * utility.constants.binomial_normal(lc,rc,k) * utility.constants.binomial_normal(ln,rn,k) )
     return offset, coef
 
+def calc_group_coef_dx_node(t,d):
+    stencil = [t+2*d,t,t+2*d,t]
+    offset, coef = calc_coef_dx_node(stencil)
+    # Target is to evaluate Re H(pi/d), which is expected to be negative when d>=2
+    # This function will group coefficients to those equal to 
+    # long_list:
+    #   1, cos(pi/d), cos(2 pi/d) ..., cos((d-1) pi/d)
+    # short_list:
+    #   1, cos(pi/d), cos(2 pi/d) ..., cos(floor(d/2) pi/d)
+    long_list = []
+    for k in range(0,d):
+        long_list.append( sp.Integer(0) )
+        lmin = math.floor((t+k+d)/d)
+        lmax = math.floor((t-k+d)/d)
+        for m in range(-lmin,lmax+1):
+            long_list[-1] = long_list[-1] + utility.constants.power_sign(m-1) * coef[offset+(k+m*d-d)]
+    short_list = []
+    short_list.append( long_list[0] )
+    dom_sum = abs(short_list[0])
+    for k in range(1,math.floor((d+1)/2)):
+        short_list.append( long_list[k] - long_list[d-k] )
+        dom_sum = dom_sum-abs(short_list[-1])
+    return long_list, short_list, dom_sum
+
+def calc_group_coef_dx_node_double(t,d):
+    stencil = [t+2*d,t,t+2*d,t]
+    offset, coef = calc_coef_dx_node(stencil)
+    # Target is to evaluate Re H(pi/d), which is expected to be negative when d>=2
+    # This function will group coefficients to those equal to 
+    # long_list:
+    #   1, cos(pi/d), cos(2 pi/d) ..., cos((d-1) pi/d)
+    # short_list:
+    #   1, cos(pi/d), cos(2 pi/d) ..., cos(floor(d/2) pi/d)
+    long_list = []
+    for k in range(0,d):
+        long_list.append( 0.0 )
+        lmin = math.floor((t+k+d)/d)
+        lmax = math.floor((t-k+d)/d)
+        for m in range(-lmin,lmax+1):
+          long_list[-1] = long_list[-1] + float(utility.constants.power_sign(m-1) * coef[offset+(k+m*d-d)])
+    short_list = []
+    short_list.append( long_list[0] )
+    dom_sum = abs(short_list[0])
+    for k in range(1,math.floor((d+1)/2)):
+        short_list.append( long_list[k] - long_list[d-k] )
+        dom_sum = dom_sum-abs(short_list[-1])
+    return long_list, short_list, dom_sum
+
+
 # For stability analysis, we define:
 #   beta(z) = \sum_k beta_k z^k
 # and 
@@ -98,21 +148,21 @@ def func_dx_imag_beta(stencil):
     imag_beta = utility.functions.func_sin_node(offset,coef)
     return imag_beta
 
-def plot_dx_real_beta(stencil,plotZero=True,nsample=-1):
+def plot_dx_real_beta(stencil,plotZero=True,nsample=-1,wSinWaveNo=1,wSinPow=0,vPiMarkers=[]):
     real_beta = func_dx_real_beta(stencil)
+    if wSinPow>0:
+        theta = sp.symbols('theta')
+        for k in range(0,wSinPow):
+            real_beta = real_beta * sp.sin(wSinWaveNo*theta/2)
     utility.functions.plot_theta(0,2*np.pi,real_beta,plotZero,nsample)
-
-def plot_dx_real_beta_wsin(stencil,waveNo,sinPow,plotZero=True,nsample=-1):
-    real_beta = func_dx_real_beta(stencil)
-    theta = sp.symbols('theta')
-    wreal_beta = real_beta
-    for k in range(0,sinPow):
-        wreal_beta = wreal_beta * sp.sin(waveNo*theta/2)
-    utility.functions.plot_theta(0,2*np.pi,wreal_beta,plotZero,nsample)
+    for piVal in vPiMarkers:
+        utility.functions.add_vertical_lines([piVal*np.pi])
+    plt.show()
 
 def plot_dx_imag_beta(stencil,plotZero=False,nsample=-1):
     imag_beta = func_dx_imag_beta(stencil)
     utility.functions.plot_theta(0,2*np.pi,imag_beta,plotZero,nsample)
+    plt.show()
 
 # This function plot the coefficient of Re beta(e^{i\theta}):
 #   [0, 1, ..., max(ln,rn)] v.s. [beta_0 beta_{-1} ... beta_{-l}] + [0 beta_1 ... beta_r]
@@ -155,4 +205,5 @@ def plot_coef_dx_node_cos(stencil,fold=True,normalize='first'):
         for k in range(0,len(coefs)):
             coefs[k] = coefs[k]/to_divide
     utility.functions.plot_coef(index,coefs)
+    plt.show()
 

@@ -6,6 +6,7 @@ import utility.canvas
 
 import numpy as np
 import sympy as sp
+import matplotlib.pyplot as plt
 
 # compute coefficients 
 #   beta_k -l \le k \le r 
@@ -46,10 +47,12 @@ def func_dx_imag(stencil):
 def plot_dx_real(stencil,plotZero=True,nsample=-1):
     real_mu = func_dx_real(stencil)
     utility.functions.plot_theta(0,2*np.pi,real_mu,plotZero,nsample)
+    plt.show()
 
 def plot_dx_imag(stencil,plotZero=False,nsample=-1):
     imag_mu = func_dx_imag(stencil)
     utility.functions.plot_theta(0,2*np.pi,imag_mu,plotZero,nsample)
+    plt.show()
 
 # The next functions plot order stars/stability regions
 #   sigma(z) = \sum_k beta_k e^{kz} - z
@@ -57,4 +60,5 @@ def plot_dx_imag(stencil,plotZero=False,nsample=-1):
 def plot_dx_os(stencil,range_x,range_y=[-np.pi,np.pi],nsample=-1):
     offset, coef = calc_coef_dx(stencil)
     utility.canvas.plot_os_exp_z(offset,coef,range_x,range_y,nsample)
+    plt.show()
     # plot canvas, construct function handle for sigma, etc.
