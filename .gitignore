@@ -25,7 +25,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-ande/runs/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -181,3 +180,5 @@ doc/*.pdf
 
 # MacOS
 .DS_Store
+runs.py
+*.swp
