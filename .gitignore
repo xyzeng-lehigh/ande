@@ -180,5 +180,5 @@ doc/*.pdf
 
 # MacOS
 .DS_Store
-runs.py
+#runs.py
 *.swp
