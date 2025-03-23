@@ -39,3 +39,15 @@ def power_sign(n):
     if n%2 == 1:
         S = -S
     return S
+
+# Coefficients of Chebyshev polynomials
+#   T_n(cos w) = cos(n w)
+# T_n(x) = \sum_{k=0}^n coef[k] (1-x)^k
+def cheby_coef(n):
+    coef = []
+    coef.append( sp.Integer(1) )
+    for k in range(1,n+1):
+        prev_coef = coef[-1]
+        prev_coef = prev_coef * (-2) * sp.Rational((n+k-1)*(n-k+1),2*k*(2*k-1))
+        coef.append( prev_coef )
+    return coef

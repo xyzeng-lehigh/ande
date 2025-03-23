@@ -30,22 +30,22 @@ def func_sin_node(offset,coef):
         fsin = fsin + coef[offset+k] * sp.sin(k*theta)
     return fsin
 
-def plot(var_name,val0,val1,func,plotZero,nsample):
+def plot(var_name,val0,val1,func,scale=1.0,plotZero=True,nsample=-1,color='b'):
     if nsample <= 0:
         nsample = 2001
     var = np.linspace(val0,val1,nsample)
     val = np.zeros(nsample)
     for i in range(0,nsample):
-        val[i] = sp.Float(func.subs(sp.symbols(var_name),var[i]))
+        val[i] = sp.Float(func.subs(sp.symbols(var_name),scale*var[i]))
     plt.xlim(val0,val1)
-    plt.plot(var,val,'b-')
+    plt.plot(var,val,color+'-')
     if plotZero:
         plt.plot([val0, val1],[0, 0],'r-')
     plt.xlabel(r'$'+'\\'+var_name+'$',fontsize=18)
     #plt.show()
 
-def plot_theta(val0,val1,func,plotZero,nsample):
-    plot('theta',val0,val1,func,plotZero,nsample)
+def plot_theta(val0,val1,func,scale=1.0,plotZero=True,nsample=-1,color='b'):
+    plot('theta',val0,val1,func,scale,plotZero,nsample,color)
 
 def plot_coef(index,coefs):
     plt.plot(index,coefs,'k.',markersize=12)

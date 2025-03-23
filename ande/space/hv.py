@@ -154,14 +154,14 @@ def plot_dx_real_beta(stencil,plotZero=True,nsample=-1,wSinWaveNo=1,wSinPow=0,vP
         theta = sp.symbols('theta')
         for k in range(0,wSinPow):
             real_beta = real_beta * sp.sin(wSinWaveNo*theta/2)
-    utility.functions.plot_theta(0,2*np.pi,real_beta,plotZero,nsample)
+    utility.functions.plot_theta(0,2*np.pi,real_beta,1.0,plotZero,nsample)
     for piVal in vPiMarkers:
         utility.functions.add_vertical_lines([piVal*np.pi])
     plt.show()
 
 def plot_dx_imag_beta(stencil,plotZero=False,nsample=-1):
     imag_beta = func_dx_imag_beta(stencil)
-    utility.functions.plot_theta(0,2*np.pi,imag_beta,plotZero,nsample)
+    utility.functions.plot_theta(0,2*np.pi,imag_beta,1.0,plotZero,nsample)
     plt.show()
 
 # This function plot the coefficient of Re beta(e^{i\theta}):
