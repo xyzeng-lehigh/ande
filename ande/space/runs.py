@@ -134,4 +134,32 @@ def plot_reH_diff_fd(t,d):
     cos_fun = hv.utility.functions.func_cos_node(0,coefs)
     hv.utility.functions.plot_theta(0,2*np.pi,cos_fun,1.0,True,-1)
     hv.utility.functions.add_vertical_lines([np.pi/d])
+    val = sp.Float(cos_fun.subs('theta',np.pi/d))
     plt.show()
+    real_coefs = []
+    for k in range(0,len(coefs)):
+        real_coefs.append( float(coefs[k]) )
+    return real_coefs, val
+
+def calc_reH_diff_fd_multiple(m,d):
+    # stencil = [md+2d,md,md+2d,md]
+    # these coefficients multiply the original by d
+    coefs_sm = []
+    val = hv.utility.constants.rf_ratio(m*d+d+1,m*d+1,d)
+    coefs_sm.append( val*(val-2*hv.utility.constants.power_sign(d)) )
+    for k in range(2,m+3):
+        val = hv.utility.constants.rf_ratio((m+2-k)*d+1,(m+2)*d+1,(k-2)*d)
+        coefs_sm.append( val*(val-2*hv.utility.constants.power_sign(k*d)) )
+        coefs_sm[-1] = hv.utility.constants.power_sign(k+1) * coefs_sm[-1]/k
+    coefs_sp = []
+    for k in range(1,m+1):
+        val = hv.utility.constants.rf_ratio((m-k)*d+1,(m+2)*d+1,k*d)
+        coefs_sp.append( val*(val-2*hv.utility.constants.power_sign(k*d)) )
+        coefs_sp[-1] = hv.utility.constants.power_sign(k) * coefs_sp[-1]/k
+    real_coef_sm = []
+    for k in range(0,len(coefs_sm)):
+        real_coef_sm.append( float(coefs_sm[k]) )
+    real_coef_sp = []
+    for k in range(0,len(coefs_sp)):
+        real_coef_sp.append( float(coefs_sp[k]) )
+    return real_coef_sm, real_coef_sp

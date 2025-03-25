@@ -55,3 +55,13 @@ def add_vertical_lines(vMarkers):
     [y_min, y_max] = plt.gca().get_ylim()
     for xval in vMarkers:
         plt.plot([xval, xval],[y_min, y_max],'g--')
+
+def sum_sequence(seq,limit=-1):
+    val = 0.0
+    if limit < 0:
+       limit = len(seq)
+    else:
+       limit = min(limit,len(seq))
+    for k in range(0,limit):
+        val = val + float(seq[k])
+    return val

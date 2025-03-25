@@ -51,3 +51,12 @@ def cheby_coef(n):
         prev_coef = prev_coef * (-2) * sp.Rational((n+k-1)*(n-k+1),2*k*(2*k-1))
         coef.append( prev_coef )
     return coef
+
+# Ratio between two rising factorials:
+#   [x]_n/[y]_n = [x(x+1)...(x+n-1)]/[y(y+1)...(y+n-1)]
+# This function assumes x and y are integers
+def rf_ratio(x,y,n):
+    val = sp.Integer(1)
+    for k in range(0,n):
+        val = val * sp.Rational(x+k,y+k)
+    return val
