@@ -136,7 +136,7 @@ def calc_group_coef_dx_node_double(t,d):
 #   alpha(z) = \sum_k alpha_k z^k
 # Then stability of the semi-discretized method is equivalent to two conditions:
 #   (1) Re beta >= 0
-#   (2) Re alpla Re \bar{beta}(z-1)alpha + [Im (z-1)alpha]^2 <= 0
+#   (2) Re beta Re \bar{beta}(z-1)alpha + [Im (z-1)alpha]^2 <= 0
 # when z=e^{i theta}
 def func_dx_real_beta(stencil):
     offset, coef = calc_coef_dx_node(stencil)
@@ -147,6 +147,27 @@ def func_dx_imag_beta(stencil):
     offset, coef = calc_coef_dx_node(stencil)
     imag_beta = utility.functions.func_sin_node(offset,coef)
     return imag_beta
+
+# This actually computes (z-1)alpha
+def func_dx_real_alpha(stencil):
+    offset, coef_alpha = calc_coef_dx_cell(stencil)
+    coef = []
+    coef.append(sp.Integer(0)-coef_alpha[0])
+    for k in range(1,len(coef_alpha)):
+        coef.append( coef_alpha[k-1]-coef_alpha[k] )
+    coef.append( coef_alpha[-1] )
+    real_alpha = utility.functions.func_cos_node(offset,coef)
+    return real_alpha
+
+def func_dx_imag_alpha(stencil):
+    offset, coef_alpha = calc_coef_dx_cell(stencil)
+    coef = []
+    coef.append(sp.Integer(0)-coef_alpha[0])
+    for k in range(1,len(coef_alpha)):
+        coef.append( coef_alpha[k-1]-coef_alpha[k] )
+    coef.append( coef_alpha[-1] )
+    imag_alpha = utility.functions.func_sin_node(offset,coef)
+    return imag_alpha
 
 def plot_dx_real_beta(stencil,plotZero=True,nsample=-1,wSinWaveNo=1,wSinPow=0,vPiMarkers=[]):
     real_beta = func_dx_real_beta(stencil)
@@ -207,3 +228,29 @@ def plot_coef_dx_node_cos(stencil,fold=True,normalize='first'):
     utility.functions.plot_coef(index,coefs)
     plt.show()
 
+# This function plot a number of curves related to the stability of semi-discretized
+# HV methods for advection, which requires:
+#   (1) Re beta >= 0
+#   (2) Re beta Re \bar{beta}gamma + [Im gamma]^2 <= 0
+# Here gamma = (z-1)alpha
+# Note that (2) can be converted to:
+#   (3) (Re beta)^2(Re gamma) + (Re beta)(Im beta)(Im gamma)
+#       + (Im gamma)^2 <= 0
+# This function will plot the following curves:
+#   1. (Re beta)^2(Re gamma)
+#   2. (Re beta)(Im beta)(Im gamma)
+#   3. (Im gamma)^2 
+def plot_curves_stab_dx(stencil,plotZero=True,nsample=-1,plotSubCurves=True):
+    real_beta  = func_dx_real_beta(stencil)
+    imag_beta  = func_dx_imag_beta(stencil)
+    real_gamma = func_dx_real_alpha(stencil)
+    imag_gamma = func_dx_imag_alpha(stencil)
+    group_1 = [real_beta, real_beta, real_gamma]
+    group_2 = [real_beta, imag_beta, imag_gamma]
+    group_3 = [imag_gamma, imag_gamma]
+    if plotSubCurves:
+      utility.functions.plot_theta_products(0,np.pi,group_1,1.0,False,nsample,color='b')
+      utility.functions.plot_theta_products(0,np.pi,group_2,1.0,False,nsample,color='m')
+      utility.functions.plot_theta_products(0,np.pi,group_3,1.0,False,nsample,color='c')
+    utility.functions.plot_theta_sum_products(0,np.pi,[group_1, group_2, group_3],plotZero,nsample,color='k')
+    plt.show()

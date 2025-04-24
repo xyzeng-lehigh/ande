@@ -1,4 +1,5 @@
 import hv
+import fd
 import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
@@ -140,6 +141,22 @@ def plot_reH_diff_fd(t,d):
     for k in range(0,len(coefs)):
         real_coefs.append( float(coefs[k]) )
     return real_coefs, val
+
+def calc_reH_diff_hv_min(t,d):
+    s = 2*d
+    offset, coef = hv.calc_coef_dx_node([t+s,t,t+s,t])
+    val0 = sp.Float(coef[offset])
+    reH = hv.func_dx_real_beta([t+s,t,t+s,t])
+    val1 = sp.Float(reH.subs('theta',np.pi/d))
+    return val0-val1
+
+def calc_reH_diff_fdm_min(t,d):
+    s = 2*d
+    offset, coef = fd.calc_coef_dx([t+s,t])
+    val0 = sp.Float(coef[offset])
+    reH = fd.func_dx_real([t+s,t])
+    val1 = sp.Float(reH.subs('theta',np.pi-np.pi/d))
+    return val0-val1
 
 def calc_reH_diff_fd_multiple(m,d):
     # stencil = [md+2d,md,md+2d,md]

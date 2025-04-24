@@ -47,6 +47,22 @@ def plot(var_name,val0,val1,func,scale=1.0,plotZero=True,nsample=-1,color='b'):
 def plot_theta(val0,val1,func,scale=1.0,plotZero=True,nsample=-1,color='b'):
     plot('theta',val0,val1,func,scale,plotZero,nsample,color)
 
+def plot_theta_products(val0,val1,funcs,scale=1.0,plotZero=True,nsample=-1,color='b'):
+    func = sp.Integer(1)
+    for k in range(0,len(funcs)):
+        func = func * funcs[k]
+    plot('theta',val0,val1,func,scale,plotZero,nsample,color)
+
+def plot_theta_sum_products(val0,val1,group_funcs,scale=1.0,plotZero=True,nsample=-1,color='b'):
+    sfunc = sp.Integer(0)
+    for n in range(0,len(group_funcs)):
+        funcs = group_funcs[n]
+        func = sp.Integer(1)
+        for k in range(0,len(funcs)):
+            func = func * funcs[k]
+        sfunc = sfunc + func
+    plot('theta',val0,val1,sfunc,scale,plotZero,nsample,color)
+
 def plot_coef(index,coefs):
     plt.plot(index,coefs,'k.',markersize=12)
     #plt.show()
