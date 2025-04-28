@@ -180,3 +180,29 @@ def calc_reH_diff_fd_multiple(m,d):
     for k in range(0,len(coefs_sp)):
         real_coef_sp.append( float(coefs_sp[k]) )
     return real_coef_sm, real_coef_sp
+
+def calc_constant_1(l,r):
+    var = sp.Integer(0)
+    for k in range(-l,r+1):
+        var = var + hv.utility.constants.harmonic_diff(l+k,r-k)*hv.utility.constants.binomial_normal(l,r,k)*hv.utility.constants.binomial_normal(l,r,k)
+    return var
+
+def plot_diff_hweno_a(l,r):
+    offset, coef_hv = hv.calc_coef_dx_node([l,r,l,r])
+    b0 = sp.Integer(0)
+    for k in range(0,len(coef_hv)):
+        b0 = b0 + coef_hv[k]
+    coef = []
+    for k in range(0,l+1):
+        val = hv.utility.constants.binomial_normal(l,r,-k)
+        coef.append((b0-2*hv.utility.constants.harmonic_diff(l-k,r+k))*val*val)
+    for k in range(1,r+1):
+        val = hv.utility.constants.binomial_normal(l,r,k)
+        tmp = (b0-2*hv.utility.constants.harmonic_diff(l+k,r-k))*val*val
+        if k > l:
+            coef.append(tmp)
+        else:
+            coef[k] = coef[k] + tmp
+    cos_fun = hv.utility.functions.func_cos_node(0,coef)
+    hv.utility.functions.plot_theta(0,2*np.pi,cos_fun,1.0,True,-1)
+    plt.show()
