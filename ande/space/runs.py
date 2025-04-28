@@ -230,3 +230,14 @@ def plot_diff_hweno_curves(l,r):
     hv.utility.functions.plot_theta_sum_products(0,2*np.pi,[[real_beta],[cos_fun1],[cos_fun2]],1.0,True,-1,color='k')
     plt.show()
 
+def calc_diff_hweno_pi(l,r):
+    val1 = sp.Integer(0)
+    for k in range(-l,r+1):
+        tmp = hv.utility.constants.binomial_normal(l,r,k)
+        val1 = val1 + hv.utility.constants.harmonic_diff(l+k,r-k)*tmp*tmp*hv.utility.constants.power_sign(k)
+
+    val2 = sp.Integer(0)
+    for k in range(-l,r+1):
+        tmp = hv.utility.constants.binomial_normal(l,r,k)
+        val2 = val2 + 2*hv.utility.constants.harmonic_num(l+k)*tmp*tmp*hv.utility.constants.power_sign(k)
+    return [val1, val2], [float(val1), float(val2)]
