@@ -20,6 +20,18 @@ def harmonic_diff(m,n):
             H = H - sp.Rational(1,i)
     return H
 
+def binomial(m,n):
+    C = sp.Integer(1)
+    if m<n:
+        C = sp.Integer(0)
+    elif n<0:
+        C = sp.Integer(0)
+    else:
+        n = min(n,m-n)
+        for k in range(0,n):
+            C = C*sp.Rational(m-k,n-k)
+    return C
+
 # Normalized binomial coefficients
 #   C^{l,r}_k = l!r!/(l+k)!(r-k)!
 def binomial_normal(l,r,k):

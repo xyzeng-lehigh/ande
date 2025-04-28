@@ -187,22 +187,46 @@ def calc_constant_1(l,r):
         var = var + hv.utility.constants.harmonic_diff(l+k,r-k)*hv.utility.constants.binomial_normal(l,r,k)*hv.utility.constants.binomial_normal(l,r,k)
     return var
 
-def plot_diff_hweno_a(l,r):
+def plot_diff_hweno_curves(l,r):
     offset, coef_hv = hv.calc_coef_dx_node([l,r,l,r])
+    real_beta = hv.func_dx_real_beta([l,r,l,r])
+    hv.utility.functions.plot_theta(0,2*np.pi,real_beta,1.0,True,-1,color='b')
+
     b0 = sp.Integer(0)
     for k in range(0,len(coef_hv)):
         b0 = b0 + coef_hv[k]
-    coef = []
+
+    denom = hv.utility.constants.binomial(2*l+2*r,l+r)
+
+    coef1 = []
     for k in range(0,l+1):
-        val = hv.utility.constants.binomial_normal(l,r,-k)
-        coef.append((b0-2*hv.utility.constants.harmonic_diff(l-k,r+k))*val*val)
+        val = hv.utility.constants.binomial(l+r,l-k)
+        coef1.append(-b0*val*val/denom)
     for k in range(1,r+1):
-        val = hv.utility.constants.binomial_normal(l,r,k)
-        tmp = (b0-2*hv.utility.constants.harmonic_diff(l+k,r-k))*val*val
+        val = hv.utility.constants.binomial(l+r,l+k)
+        tmp = -b0*val*val/denom
         if k > l:
-            coef.append(tmp)
+            coef1.append(tmp)
         else:
-            coef[k] = coef[k] + tmp
-    cos_fun = hv.utility.functions.func_cos_node(0,coef)
-    hv.utility.functions.plot_theta(0,2*np.pi,cos_fun,1.0,True,-1)
+            coef1[k] = coef1[k] + tmp
+
+    coef2 = []
+    for k in range(0,l+1):
+        val = hv.utility.constants.binomial(l+r,l-k)
+        coef2.append(2*hv.utility.constants.harmonic_diff(l-k,r+k)*val*val/denom)
+    for k in range(1,r+1):
+        val = hv.utility.constants.binomial(l+r,l+k)
+        tmp = 2*hv.utility.constants.harmonic_diff(l+k,r-k)*val*val/denom
+        if k > l:
+            coef2.append(tmp)
+        else:
+            coef2[k] = coef2[k] + tmp
+
+    cos_fun1 = hv.utility.functions.func_cos_node(0,coef1)
+    cos_fun2 = hv.utility.functions.func_cos_node(0,coef2)
+    hv.utility.functions.plot_theta(0,2*np.pi,cos_fun1,1.0,True,-1,color='c')
+    hv.utility.functions.plot_theta(0,2*np.pi,cos_fun2,1.0,True,-1,color='m')
+
+    hv.utility.functions.plot_theta_sum_products(0,2*np.pi,[[real_beta],[cos_fun1],[cos_fun2]],1.0,True,-1,color='k')
     plt.show()
+
