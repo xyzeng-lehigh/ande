@@ -241,3 +241,54 @@ def calc_diff_hweno_pi(l,r):
         tmp = hv.utility.constants.binomial_normal(l,r,k)
         val2 = val2 + 2*hv.utility.constants.harmonic_num(l+k)*tmp*tmp*hv.utility.constants.power_sign(k)
     return [val1, val2], [float(val1), float(val2)]
+
+def calc_binom_square_harmonic_odd(n,scale=False):
+    val = sp.Integer(0)
+    for k in range(1,2*n+2):
+        tmp = hv.utility.constants.binomial(2*n+1,k)
+        val = val + hv.utility.constants.power_sign(k) * hv.utility.constants.harmonic_num(k) * tmp * tmp
+    multiplier = sp.Integer(1)
+    if scale:
+        multiplier = hv.utility.constants.binomial(2*n+1,n)*(n+1)
+    return val * multiplier
+
+def calc_binom_harmonic(n):
+    val = sp.Integer(0)
+    for k in range(1,n+1):
+        tmp = hv.utility.constants.binomial(n,k)
+        val = val + hv.utility.constants.power_sign(k) * hv.utility.constants.harmonic_num(k) * tmp
+    multiplier = sp.Integer(1)
+    return val * multiplier
+
+def calc_weno_poly_coef(n):
+    x = sp.symbols('x')
+    p = sp.Integer(0)
+    for k in range(1,n+1):
+        p = p+sp.Rational(1,k)*sp.Pow(1-x*x,n-k)*sp.Pow(1-x,k)
+    p = sp.expand(p)
+    #p = sp.Poly(p)
+    #return p.nth(n)
+    return p
+
+def calc_weno_twopoly(n):
+    x = sp.symbols('x')
+    y = sp.symbols('y')
+    p = sp.Pow(1-x,n)*sp.Pow(1+x-y,n)
+    p = sp.expand(p)
+    p = sp.Poly(p)
+    val = sp.Integer(0)
+    for l in range(1,n+1):
+        val = val + p.nth(n-l,l)/l
+    return val
+
+def calc_weno_sum_twopoly(n):
+    x = sp.symbols('x')
+    p = -hv.utility.constants.harmonic_num(n)*sp.Pow(1-x*x,n)
+    for k in range(1,n+1):
+        p = p + sp.Pow(1-x*x,n-k)*sp.Pow(1-x,k)/k
+    val = 0
+    for m in range(0,n):
+        w = sp.exp(2*m*sp.I*np.pi/n)
+        val = val + p.subs(x,w)
+    val = sp.simplify(val)
+    return val/n-hv.utility.constants.harmonic_num(n)
