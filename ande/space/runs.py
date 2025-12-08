@@ -292,3 +292,54 @@ def calc_weno_sum_twopoly(n):
         val = val + p.subs(x,w)
     val = sp.simplify(val)
     return val/n-hv.utility.constants.harmonic_num(n)
+
+def plot_ade_dx_cent_diff(lc,ln):
+    L = lc+ln
+    offset_c, coef_c, offset_n, coef_n = hv.calc_coef_dx([L,L])
+    theta = sp.symbols('theta')
+    fun_rhs = sp.sin(theta)*hv.utility.functions.func_sin_node_gen(offset_c,lc,coef_c,1,2)
+    fun_lhs = -hv.utility.functions.func_sin_node_gen(offset_n+1,ln,coef_n,2,2)
+    hv.utility.functions.plot_theta(0,np.pi,fun_lhs,1.0,True,-1,'b');
+    hv.utility.functions.plot_theta(0,np.pi,fun_rhs,1.0,True,-1,'r');
+    plt.show()
+
+def plot_ade_dxx_cent_diff(lc,ln):
+    L = lc+ln
+    offset_c, coef_c, offset_n, coef_n = hv.calc_coef_dxx([L])
+    theta = sp.symbols('theta')
+    fun_rhs = -sp.sin(theta/2)*hv.utility.functions.func_cos_node(offset_n,coef_n)
+    fun_lhs = hv.utility.functions.func_sin_node_gen(offset_c,offset_c,coef_c,1,1)-hv.utility.functions.func_sin_node_gen(offset_c+1,offset_c-1,coef_c,1,1)
+    #hv.utility.functions.plot_theta(0,2*np.pi,fun_lhs,1.0,True,-1,'b');
+    #hv.utility.functions.plot_theta(0,2*np.pi,fun_rhs,1.0,True,-1,'r');
+    hv.utility.functions.plot_theta(0,np.pi,fun_rhs-fun_lhs,1.0,True,-1,'g');
+    plt.show()
+
+def calc_ade_dxx_cent_diff(lc,ln):
+    L = lc+ln
+    offset_c, coef_c, offset_n, coef_n = hv.calc_coef_dxx([L])
+    coef_c.append( sp.Integer(0) )
+    coef_n.append( sp.Integer(0) )
+    seq_orig = []
+    for k in range(1,max(2*lc,2*ln+1)+1):
+        if k%2 == 1:
+            m=int((k-1)/2)
+            seq_orig.append( float(coef_n[offset_n+m+1]-coef_n[offset_n+m]) )
+        else:
+            m=int(k/2)
+            seq_orig.append( float(coef_c[offset_c+m-1]-coef_c[offset_c+m]) )
+    seq_viet = []
+    for k in range(0,len(seq_orig)):
+        seq_viet.append( (k+1)*seq_orig[k] )
+    seq_c    = []
+    for k in range(0,len(seq_orig)):
+        seq_c.append( seq_orig[k] )
+    for k in range(1,len(seq_orig)):
+        seq_c[len(seq_orig)-1-k] = seq_c[len(seq_orig)-1-k] - seq_c[len(seq_orig)-k]
+    seq_b = []
+    for k in range(0,ln+2):
+        seq_b.append( float(coef_n[offset_n+k]) )
+    seq_a = []
+    for k in range(0,lc+1):
+        seq_a.append( float(coef_c[offset_c+k]) )
+    return seq_a, seq_b, seq_orig, seq_viet, seq_c
+
