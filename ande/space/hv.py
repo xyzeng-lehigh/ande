@@ -194,7 +194,7 @@ def plot_dx_imag_beta(stencil,plotZero=False,nsample=-1):
 #   - no normalization if normalize='none'
 #   - by beta_0 if normalize='first'
 #   - by max_k|beta_k| or max(max_k|beta_k+beta_{-k}|,\abs{beta_0}) if normalize = 'max'
-def plot_coef_dx_node_cos(stencil,fold=True,normalize='first'):
+def plot_coef_dx_node_cos(stencil,fold=True,normalize='first',axistickfsize=0):
     offset, coef = calc_coef_dx_node(stencil)
     coefs = []
     ln = offset
@@ -226,6 +226,8 @@ def plot_coef_dx_node_cos(stencil,fold=True,normalize='first'):
         for k in range(0,len(coefs)):
             coefs[k] = coefs[k]/to_divide
     utility.functions.plot_coef(index,coefs)
+    if axistickfsize > 0:
+        plt.gca().tick_params(axis='both',labelsize=axistickfsize)
     plt.show()
 
 # This function plot a number of curves related to the stability of semi-discretized

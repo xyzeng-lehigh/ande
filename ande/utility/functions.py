@@ -64,7 +64,7 @@ def plot_theta_sum_products(val0,val1,group_funcs,scale=1.0,plotZero=True,nsampl
     plot('theta',val0,val1,sfunc,scale,plotZero,nsample,color)
 
 def plot_coef(index,coefs):
-    plt.plot(index,coefs,'k.',markersize=12)
+    plt.plot(index,coefs,'k.',markersize=24)
     #plt.show()
 
 def add_vertical_lines(vMarkers):
