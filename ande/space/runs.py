@@ -343,3 +343,53 @@ def calc_ade_dxx_cent_diff(lc,ln):
         seq_a.append( float(coef_c[offset_c+k]) )
     return seq_a, seq_b, seq_orig, seq_viet, seq_c
 
+def calc_analysis_dx_cent(L,toPlot=True): # stencil = [L,L]
+  [lc,rc,ln,rn] = hv.calc_stencil([L,L])
+  offset_c, coef_c, offset_n, coef_n = hv.calc_coef_dx([L,L])
+  theta = sp.symbols('theta')
+  func_dx_alpha = hv.utility.functions.func_sin_node_gen(offset_c,lc,coef_c,phase=1,stride=2)
+  func_dx_beta  = -hv.utility.functions.func_sin_node_gen(offset_n+1,ln,coef_n,phase=2,stride=2)
+  if toPlot:
+    hv.utility.functions.plot_theta(0,np.pi,func_dx_alpha,plotZero=True,color='b')
+    hv.utility.functions.plot_theta(0,np.pi,func_dx_beta,plotZero=True,color='g')
+    plt.show()
+  return func_dx_alpha, func_dx_beta
+
+def calc_analysis_dxx_cent(L,toPlot=True): # stencil = [L]
+  [lc,ln] = hv.calc_stencil_dxx([L])
+  offset_c, coef_c, offset_n, coef_n = hv.calc_coef_dxx([L])
+  theta = sp.symbols('theta')
+  func_dxx_alpha = hv.utility.functions.func_sin_node_gen(offset_c,lc,coef_c,phase=2,stride=2) - hv.utility.functions.func_sin_node_gen(offset_c+1,lc-1,coef_c,phase=2,stride=2)
+  func_dxx_beta  = - coef_n[offset_n] - 2 * hv.utility.functions.func_cos_node_gen(offset_n+1,ln,coef_n,phase=2,stride=2)
+  if toPlot:
+    hv.utility.functions.plot_theta(0,np.pi,func_dxx_alpha,plotZero=True,color='b')
+    hv.utility.functions.plot_theta(0,np.pi,func_dxx_beta,plotZero=True,color='g')
+    plt.show()
+  return func_dxx_alpha, func_dxx_beta
+
+def verify_analysis_cent(Lx,Lxx):
+  func_dx_alpha,  func_dx_beta  = calc_analysis_dx_cent( Lx, toPlot=False)
+  func_dxx_alpha, func_dxx_beta = calc_analysis_dxx_cent(Lxx,toPlot=False)
+  theta = sp.symbols('theta')
+  func_to_plot = sp.sin(theta) * func_dx_alpha * func_dxx_beta - func_dx_beta * func_dxx_alpha
+  hv.utility.functions.plot_theta(0,np.pi,func_to_plot,plotZero=True)
+  plt.show()
+
+def plot_analysis_cent(Lx,Lxx,plt_option=0):
+  func_dx_alpha,  func_dx_beta  = calc_analysis_dx_cent( Lx, toPlot=False)
+  func_dxx_alpha, func_dxx_beta = calc_analysis_dxx_cent(Lxx,toPlot=False)
+  theta = sp.symbols('theta')
+  match plt_option:
+    case 1:
+      func_to_plot_dx  = func_dx_alpha-theta*func_dx_beta
+      func_to_plot_dxx = sp.sin(theta)*func_dxx_beta-func_dxx_alpha
+    case 2:
+      func_to_plot_dx  = sp.sin(theta)*func_dx_alpha-theta*func_dx_beta
+      func_to_plot_dxx = func_dxx_beta-func_dxx_alpha
+    case _:
+      func_to_plot_dx  = sp.sin(theta)*func_dx_alpha-theta*func_dx_beta
+      func_to_plot_dxx = theta*func_dxx_beta-func_dxx_alpha
+  hv.utility.functions.plot_theta(0,np.pi,func_to_plot_dx,plotZero=True,color='b')
+  hv.utility.functions.plot_theta(0,np.pi,func_to_plot_dxx,plotZero=False,color='g')
+  plt.show()
+

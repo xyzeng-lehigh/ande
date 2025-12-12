@@ -331,7 +331,7 @@ def plot_curves_stab_dx(stencil,plotZero=True,nsample=-1,plotSubCurves=True):
 #   err = [1/(i theta)^3] sum_{k=-lc}^{lc-1} alpha_k ( exp( i(k+1) theta ) - exp( ik theta ) ) +
 #         [1/(i theta)^2] sum_{k=-ln}^{ln} beta_k exp( ik theta )
 #       = 1 + c theta^{2lc+2ln-1} + O( theta^{2lc+2ln+1} )
-def plot_err_dx(stencil,shift):
+def plot_err_dx(stencil,shift=0,toPlot=True):
   [lc,rc,ln,rn] = calc_stencil(stencil)
   offset_c, coef_c, offset_n, coef_n = calc_coef_dx(stencil)
   theta = sp.symbols('theta')
@@ -340,11 +340,12 @@ def plot_err_dx(stencil,shift):
   falpha_cos = -(falpha_cos_p-falpha_cos_m)/theta/theta
   fbeta_sin = utility.functions.func_sin_node(offset_n,coef_n)/theta
   func_err = falpha_cos+fbeta_sin+shift
-  utility.functions.plot_theta(0.001,np.pi,func_err,1.0)
-  plt.show()
+  if toPlot:
+    utility.functions.plot_theta(0.001,np.pi,func_err,1.0)
+    plt.show()
   return func_err
 
-def plot_err_dxx(stencil,shift=0):
+def plot_err_dxx(stencil,shift=0,toPlot=True):
   [lc,ln] = calc_stencil_dxx(stencil)
   offset_c, coef_c, offset_n, coef_n = calc_coef_dxx(stencil)
   theta = sp.symbols('theta')
@@ -353,6 +354,7 @@ def plot_err_dxx(stencil,shift=0):
   falpha_sin = -(falpha_sin_p-falpha_sin_m)/theta/theta/theta
   fbeta_cos = -utility.functions.func_cos_node(offset_n,coef_n)/theta/theta
   func_err = falpha_sin+fbeta_cos+shift
-  utility.functions.plot_theta(0.001,np.pi,func_err,1.0)
-  plt.show()
+  if toPlot:
+    utility.functions.plot_theta(0.001,np.pi,func_err,1.0)
+    plt.show()
   return func_err
