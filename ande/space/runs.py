@@ -386,6 +386,12 @@ def plot_analysis_cent(Lx,Lxx,plt_option=0):
     case 2:
       func_to_plot_dx  = sp.sin(theta)*func_dx_alpha-theta*func_dx_beta
       func_to_plot_dxx = func_dxx_beta-func_dxx_alpha
+    case 3:
+      func_to_plot_dx  = func_dx_alpha-sp.cos(theta)*func_dx_beta
+      func_to_plot_dxx = sp.sin(theta)*sp.cos(theta)*func_dxx_beta-func_dxx_alpha
+    case 4:
+      func_to_plot_dx  = sp.cos(theta)*func_dx_alpha-func_dx_beta
+      func_to_plot_dxx = sp.sin(theta)*func_dxx_beta-sp.cos(theta)*func_dxx_alpha
     case _:
       func_to_plot_dx  = sp.sin(theta)*func_dx_alpha-theta*func_dx_beta
       func_to_plot_dxx = theta*func_dxx_beta-func_dxx_alpha
@@ -393,3 +399,27 @@ def plot_analysis_cent(Lx,Lxx,plt_option=0):
   hv.utility.functions.plot_theta(0,np.pi,func_to_plot_dxx,plotZero=False,color='g')
   plt.show()
 
+def calc_analysis_cent_seq(Lx,Lxx,plt_option=0):
+  offset_c_dxx, coef_c_dxx, offset_n_dxx, coef_n_dxx = hv.calc_coef_dxx([Lxx])
+  offset_c_dx,  coef_c_dx,  offset_n_dx,  coef_n_dx  = hv.calc_coef_dx([Lx,Lx])
+  seq_dx  = []
+  seq_dxx = []
+  match plt_option:
+    case 4:
+      coef_c_dx.append(0)
+      for k in range(0,offset_c_dx):
+        seq_dx.append( float(coef_c_dx[offset_c_dx+k]/2 + coef_c_dx[offset_c_dx+k+1]/2) )
+      for k in range(1,offset_n_dx):
+        seq_dx[k-1] = seq_dx[k-1] + float(coef_n_dx[offset_n_dx+k])
+      coef_n_dxx.append(0)
+      for k in range(0,offset_n_dxx+1):
+        seq_dxx.append( float(coef_n_dxx[offset_n_dxx+k+1]-coef_n_dxx[offset_n_dxx+k]) )
+      seq_dxx.append(0.0)
+      seq_diff_alpha = []
+      coef_c_dxx.append(0)
+      for k in range(0,offset_c_dxx):
+        seq_diff_alpha.append(coef_c_dxx[offset_c_dxx+k]/2-coef_c_dxx[offset_c_dxx+k+1]/2)
+      for k in range(0,offset_n_dxx):
+        seq_dxx[k]   = seq_dxx[k] - float(seq_diff_alpha[k])
+        seq_dxx[k+1] = seq_dxx[k+1] - float(seq_diff_alpha[k]) 
+  return seq_dx, seq_dxx
