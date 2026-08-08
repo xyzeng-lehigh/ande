@@ -399,27 +399,79 @@ def plot_analysis_cent(Lx,Lxx,plt_option=0):
   hv.utility.functions.plot_theta(0,np.pi,func_to_plot_dxx,plotZero=False,color='g')
   plt.show()
 
-def calc_analysis_cent_seq(Lx,Lxx,plt_option=0):
-  offset_c_dxx, coef_c_dxx, offset_n_dxx, coef_n_dxx = hv.calc_coef_dxx([Lxx])
-  offset_c_dx,  coef_c_dx,  offset_n_dx,  coef_n_dx  = hv.calc_coef_dx([Lx,Lx])
-  seq_dx  = []
-  seq_dxx = []
-  match plt_option:
-    case 4:
-      coef_c_dx.append(0)
-      for k in range(0,offset_c_dx):
-        seq_dx.append( float(coef_c_dx[offset_c_dx+k]/2 + coef_c_dx[offset_c_dx+k+1]/2) )
-      for k in range(1,offset_n_dx):
-        seq_dx[k-1] = seq_dx[k-1] + float(coef_n_dx[offset_n_dx+k])
-      coef_n_dxx.append(0)
-      for k in range(0,offset_n_dxx+1):
-        seq_dxx.append( float(coef_n_dxx[offset_n_dxx+k+1]-coef_n_dxx[offset_n_dxx+k]) )
-      seq_dxx.append(0.0)
-      seq_diff_alpha = []
-      coef_c_dxx.append(0)
-      for k in range(0,offset_c_dxx):
-        seq_diff_alpha.append(coef_c_dxx[offset_c_dxx+k]/2-coef_c_dxx[offset_c_dxx+k+1]/2)
-      for k in range(0,offset_n_dxx):
-        seq_dxx[k]   = seq_dxx[k] - float(seq_diff_alpha[k])
-        seq_dxx[k+1] = seq_dxx[k+1] - float(seq_diff_alpha[k]) 
-  return seq_dx, seq_dxx
+# (B.7)
+def calc_analysis_cent_seq_dxx_cvx(L,plotTrigSum=False):
+  offset_c_dxx, coef_c_dxx, offset_n_dxx, coef_n_dxx = hv.calc_coef_dxx([L])
+  lc, ln = hv.calc_stencil_dxx([L]) # ln <= lc
+  coef_n_dxx.append(sp.Integer(0))
+  coef_c_dxx.append(sp.Integer(0))
+  seq = []
+  vietSeq = []
+  cvxSeq = []
+  momSeq1 = 0.0
+  momSeq3 = 0.0
+  momSeqSign = 1.0
+  for k in range(0,max(2*lc,2*ln+1)):
+    seq.append(0.0)
+  for k in range(0,ln+1):
+    seq[2*k] = float( - coef_n_dxx[offset_n_dxx+k] + coef_n_dxx[offset_n_dxx+k+1])
+  for k in range(0,lc):
+    seq[2*k+1] = float(coef_c_dxx[offset_c_dxx+k] - coef_c_dxx[offset_c_dxx+k+1])
+  for k in range(0,len(seq)):
+    vietSeq.append((k+1)*seq[k])
+  if len(seq)>2:
+    for k in range(0,len(seq)-2):
+      cvxSeq.append(seq[k]-2*seq[k+1]+seq[k+2])
+    cvxSeq.append(seq[-2]-4*seq[-1])
+  for k in range(0,len(seq)):
+    momSeq1 = momSeq1 - momSeqSign*(k+1)*seq[k]
+    momSeq3 = momSeq3 + momSeqSign*(k+1)*(k+1)*(k+1)*seq[k]/6.0
+    momSeqSign = -momSeqSign
+  if plotTrigSum:
+    fun_sin = hv.utility.functions.func_sin_node_gen(0,len(seq),seq,1,1)
+    hv.utility.functions.plot_theta(0,np.pi,fun_sin,1.0,True,-1,'r');
+    plt.show()
+  return seq, vietSeq, cvxSeq, momSeq1, momSeq3
+
+# (B.8)
+def calc_analysis_cent_seq_dx_cvx(L,plotTrigSum=False):
+  offset_c_dx,  coef_c_dx,  offset_n_dx,  coef_n_dx  = hv.calc_coef_dx([L,L])
+  lc, ln = hv.calc_stencil_dxx([L]) # ln <= lc
+  seq = []
+  vietSeq = []
+  cvxSeq = []
+  for k in range(0,max(2*lc-1,2*ln)):
+    seq.append(0.0)
+  for k in range(0,lc):
+    seq[2*k] = float(coef_c_dx[offset_c_dx+k])
+  for k in range(0,ln):
+    seq[2*k+1] = float(-coef_n_dx[offset_n_dx+k+1])
+  for k in range(0,len(seq)):
+    vietSeq.append((k+1)*seq[k])
+  if len(seq)>2:
+    for k in range(0,len(seq)-2):
+      cvxSeq.append(seq[k]-2*seq[k+1]+seq[k+2])
+    cvxSeq.append(seq[-2]-4*seq[-1])
+  if plotTrigSum:
+    fun_sin = hv.utility.functions.func_sin_node_gen(0,len(seq),seq,1,1)
+    hv.utility.functions.plot_theta(0,np.pi,fun_sin,1.0,True,-1,'r');
+    plt.show()
+  return seq, vietSeq, cvxSeq
+
+# (4.27)
+def calc_analysis_cent_seq_dx(L,plotTrigSum=False):
+  offset_c_dx,  coef_c_dx,  offset_n_dx,  coef_n_dx  = hv.calc_coef_dx([L,L])
+  lc, ln = hv.calc_stencil_dxx([L]) # ln <= lc
+  coef_c_dx.append(sp.Integer(0))
+  if ln < lc:
+    coef_n_dx.append(sp.Integer(0))
+  seq = []
+  for k in range(0,lc):
+    seq.append(0.0)
+  for k in range(0,lc):
+    seq[k] = seq[k] + coef_c_dx[offset_c_dx+k] + coef_c_dx[offset_c_dx+k+1] + 2*coef_n_dx[offset_n_dx+k+1]
+  if plotTrigSum:
+    fun_sin = hv.utility.functions.func_sin_node_gen(0,len(seq),seq,1,1)
+    hv.utility.functions.plot_theta(0,np.pi,fun_sin,1.0,True,-1,'r');
+    plt.show()
+  return seq

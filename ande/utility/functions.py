@@ -101,3 +101,43 @@ def sum_sequence(seq,limit=-1):
   for k in range(0,limit):
     val = val + float(seq[k])
   return val
+
+def check_pos_sin(seq,pattern='dec',toPlot=False):
+  limit = len(seq)
+  pair  = int(limit/2)
+  isPosSeq = True
+  plotSeq = []
+  match pattern:
+    case 'non-inc':
+      plotSeq = seq
+      for k in range(0,limit-1):
+        if seq[k] < seq[k+1]:
+          isPosSeq = False
+          break
+    case 'dec':
+      plotSeq = seq
+      for k in range(0,limit-1):
+        if seq[k] <= seq[k+1]:
+          isPosSeq = False
+          break
+    #    (2k)c_{2k} <= (2k-1)c_{2k-1}, k>=1
+    # or (2k+2)seq[2k+1] <= (2k+1)seq[2k] k>=0
+    case 'viet':
+      for k in range(0,pair):
+        if (2*k+2)*seq[2*k+1] > (2*k+1)*seq[2*k]:
+          isPosSeq = False
+          break
+      for k in range(0,limit):
+        plotSeq.append( (k+1)*seq[k] )
+    #    (k+1)c_{k+1} <= kc_k, k>=1
+    # or (k+2)seq[k+1] <= (k+1)seq[k], k>=0
+    case 'modViet':
+      for k in range(0,limit-1):
+        if (k+2)*seq[k+1] > (k+1)*seq[k]:
+          isPosSeq = False
+          break
+      for k in range(0,limit):
+        plotSeq.append( (k+1)*seq[k] )
+  if toPlot:
+    plot_coef(range(0,limit), plotSeq)
+  return isPosSeq, plotSeq

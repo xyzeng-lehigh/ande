@@ -35,7 +35,7 @@ def calc_stencil_dxx(stencil):
 # compute coefficients
 #   alpha_k -lc \le k \le rc-1 and beta_k -ln \le k \le rn
 # such that
-#   du/dx_j =   (1/h) \sum_k \alpha_k \overline{u}_{j+k+1/2} 
+#   u'(x_j) =   (1/h) \sum_k \alpha_k \overline{u}_{j+k+1/2} 
 #             + (1/h) \sum_k \beta_k u_{j+k}
 # has the optimal order p=lc+rc+ln+rn
 
@@ -146,8 +146,8 @@ def calc_group_coef_dx_node_double(t,d):
 # compute coefficients
 #   alpha_k -lc \le k \le lc-1 and beta_k -ln \le k \le ln
 # such that
-#   du/dx_j =   (1/h^2) \sum_k \alpha_k \overline{u}_{j+k+1/2} 
-#             + (1/h^2) \sum_k \beta_k u_{j+k}
+#   u''(x_j) =   (1/h^2) \sum_k \alpha_k \overline{u}_{j+k+1/2} 
+#              + (1/h^2) \sum_k \beta_k u_{j+k}
 # has the optimal order p=2lc+2ln-1
 
 # coef_c[offset_c+k] = alpha_k, -lc \le k \le lc-1
