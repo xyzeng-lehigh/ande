@@ -234,6 +234,38 @@ def func_dx_imag_alpha(stencil):
   imag_alpha = utility.functions.func_sin_node(offset,coef)
   return imag_alpha
 
+# Repeat for [D_{xx}]
+def func_dxx_real_beta(stencil):
+  offset, coef = calc_coef_dxx_node(stencil)
+  real_beta = utility.functions.func_cos_node(offset,coef)
+  return real_beta
+
+def func_dxx_imag_beta(stencil):
+  offset, coef = calc_coef_dxx_node(stencil)
+  imag_beta = utility.functions.func_sin_node(offset,coef)
+  return imag_beta
+
+# This actually computes (z-1)alpha
+def func_dxx_real_alpha(stencil):
+  offset, coef_alpha = calc_coef_dxx_cell(stencil)
+  coef = []
+  coef.append(sp.Integer(0)-coef_alpha[0])
+  for k in range(1,len(coef_alpha)):
+    coef.append( coef_alpha[k-1]-coef_alpha[k] )
+  coef.append( coef_alpha[-1] )
+  real_alpha = utility.functions.func_cos_node(offset,coef)
+  return real_alpha
+
+def func_dxx_imag_alpha(stencil):
+  offset, coef_alpha = calc_coef_dxx_cell(stencil)
+  coef = []
+  coef.append(sp.Integer(0)-coef_alpha[0])
+  for k in range(1,len(coef_alpha)):
+    coef.append( coef_alpha[k-1]-coef_alpha[k] )
+  coef.append( coef_alpha[-1] )
+  imag_alpha = utility.functions.func_sin_node(offset,coef)
+  return imag_alpha
+
 def plot_dx_real_beta(stencil,plotZero=True,nsample=-1,wSinWaveNo=1,wSinPow=0,vPiMarkers=[]):
   real_beta = func_dx_real_beta(stencil)
   if wSinPow>0:

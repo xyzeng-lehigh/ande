@@ -475,3 +475,30 @@ def calc_analysis_cent_seq_dx(L,plotTrigSum=False):
     hv.utility.functions.plot_theta(0,np.pi,fun_sin,1.0,True,-1,'r');
     plt.show()
   return seq
+
+def calc_coef_cent_ade(aLx,dLx,dLxx):
+  fc = -hv.func_dx_real_alpha([dLx,dLx])
+  f  = -hv.func_dx_real_alpha([aLx,aLx])
+  hc = -hv.func_dx_imag_beta([dLx,dLx])
+  h  = -hv.func_dx_imag_beta([aLx,aLx])
+  c  =  hv.func_dxx_imag_alpha([dLxx])
+  b  = -hv.func_dxx_real_beta([dLxx])
+  delta = f*b-c*h
+  coef0 = (fc+b)*(fc+b)*(fc*b-c*hc)
+  coef2_1 = f*(fc+b)*(fc+b)
+  coef2_2 = (f*hc+c+h*b)*(h*fc-c-f*hc)
+  coef2 = coef2_1+coef2_2
+  coef2_2_2 = h*fc-f*hc
+  #coef2 = f*(fc+b)*(fc+b)+(f*hc+c+h*b)*(h*fc-c-f*hc)
+  #hv.utility.functions.plot_theta(0,np.pi,coef0,plotZero=False,color='b')
+  #hv.utility.functions.plot_theta(0,np.pi,coef2,plotZero=False,color='g')
+  #hv.utility.functions.plot_theta(0,np.pi,coef2_1,plotZero=False,color='y')
+  #hv.utility.functions.plot_theta(0,np.pi,coef2_2,plotZero=False,color='c')
+  #hv.utility.functions.plot_theta(0,np.pi,coef2_2_2,plotZero=False,color='m')
+  hv.utility.functions.plot_theta(0,np.pi,f*f*f,plotZero=False,color='b')
+  hv.utility.functions.plot_theta(0,np.pi,2*delta*f,plotZero=False,color='g')
+  hv.utility.functions.plot_theta(0,np.pi,delta*b,plotZero=False,color='c')
+  hv.utility.functions.plot_theta(0,np.pi,f*c*h,plotZero=False,color='m')
+  hv.utility.functions.plot_theta(0,np.pi,c*c,plotZero=False,color='r')
+  plt.show()
+  return coef0, coef2
