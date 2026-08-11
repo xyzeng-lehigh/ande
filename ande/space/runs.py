@@ -502,3 +502,24 @@ def calc_coef_cent_ade(aLx,dLx,dLxx):
   hv.utility.functions.plot_theta(0,np.pi,c*c,plotZero=False,color='r')
   plt.show()
   return coef0, coef2
+
+def calc_coef_ratio_dx(L):
+  f = -hv.func_dx_real_alpha([L,L])
+  h = -hv.func_dx_imag_beta([L,L])
+  theta = sp.symbols('theta')
+  gamma = theta*(1-theta*theta/8/np.pi/np.pi)
+  #hv.utility.functions.plot_theta(0,np.pi,f-h*theta,plotZero=True,color='k')
+  #hv.utility.functions.plot_theta(0,np.pi,theta*(theta+h)-f,plotZero=True,color='b')
+  hv.utility.functions.plot_theta(0,np.pi,gamma*(gamma+h)-f,plotZero=True,color='b')
+  plt.show()
+  return
+
+def calc_coef_ratio_dxx(L):
+  c =  hv.func_dxx_imag_alpha([L])
+  b = -hv.func_dxx_real_beta([L])
+  theta = sp.symbols('theta')
+  gamma = theta*(1-theta*theta/8/np.pi/np.pi)
+  #hv.utility.functions.plot_theta(0,np.pi,b*theta-c,plotZero=True,color='k')
+  hv.utility.functions.plot_theta(0,np.pi,b*gamma-c,plotZero=True,color='b')
+  plt.show()
+  return
